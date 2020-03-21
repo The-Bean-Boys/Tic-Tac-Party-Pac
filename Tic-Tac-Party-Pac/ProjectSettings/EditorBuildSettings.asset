@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TitleScene.unity
     guid: a54063941a9ecf7409a3f2c67ec6d49f
+  - enabled: 1
+    path: Assets/Scenes/Horse Minigame.unity
+    guid: d94124955753db1438856970d1071e78
   m_configObjects: {}

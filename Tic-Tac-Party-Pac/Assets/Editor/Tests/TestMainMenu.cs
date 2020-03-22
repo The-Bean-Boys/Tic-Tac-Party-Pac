@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.SceneManagement;
 
 namespace Tests
 {
     public class TestMainMenu
     {
+        Scene scene;
+        private GameObject canvas;
         private GameObject MMGO;
         private MainMenu MM;
         [SetUp]
         public void Setup()
         {
-            GameObject canvas = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/MainMenu/Canvas"));
+            scene = SceneManager.GetActiveScene();
+            canvas = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Canvas"));
             MMGO = canvas.transform.GetChild(2).gameObject;
             MM = MMGO.GetComponent<MainMenu>();
         }
@@ -21,25 +25,20 @@ namespace Tests
         [TearDown]
         public void TearDown()
         {
+            Object.Destroy(canvas);
             Object.Destroy(MMGO);
             Object.Destroy(MM);
         }
 
-        // A Test behaves as an ordinary method
-        [Test]
-        public void TestNewScene()
+        // Tests if the playgame method opens the correct scene
+        [UnityTest]
+        public IEnumerator TestPlayGame()
         {
-            
+            Assert.AreNotEqual("GameScene", SceneManager.GetActiveScene().name);
+            MM.PlayGame();
+            yield return new WaitForSeconds(0.1f);
+            Assert.AreEqual("GameScene", SceneManager.GetActiveScene().name);
         }
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
-        [UnityTest]
-        public IEnumerator TestHelp()
-        {
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
-            yield return null;
-        }
     }
 }

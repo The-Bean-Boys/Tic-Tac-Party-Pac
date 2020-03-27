@@ -14,7 +14,6 @@ public class FinishHandler : MonoBehaviour
      */
     void Start()
     {
-        Screen.orientation = ScreenOrientation.LandscapeLeft;
         finished = false;
         winText.gameObject.SetActive(false);
     }

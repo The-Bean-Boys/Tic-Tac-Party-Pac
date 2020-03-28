@@ -17,16 +17,23 @@ public class BalloonHandler : MonoBehaviour
     void Update()
     {
         if (!popped)
-            transform.position = new Vector2(transform.position.x, transform.position.y + .08f);
+            transform.position = new Vector2(transform.position.x, transform.position.y + .03f);
         if (transform.position.y > 10)
             Die();
     }
 
     private void OnMouseDown()
     {
-        popped = true;
-        GetComponent<SpriteRenderer>().sprite = newSprite;
-        Invoke("Die", .5f);
+        if (!popped)
+        {
+            if (tag == "XAsset")
+                BalloonManagerStatic.Xtext.AddScore();
+            else
+                BalloonManagerStatic.Otext.AddScore();
+            popped = true;
+            GetComponent<SpriteRenderer>().sprite = newSprite;
+            Invoke("Die", .5f);
+        }
     }
 
     private void Die()

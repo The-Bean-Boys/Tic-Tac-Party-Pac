@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Button_Handler : MonoBehaviour
 {
-    // Update is called once per frame
+    public GameObject rope;
+    public RopeHandler ropeScript;
     public void OnClick()
     {
-        Debug.Log("A button was clicked!");
+        string playerClicked = EventSystem.current.currentSelectedGameObject.name;
+        Debug.Log("Button: " + playerClicked);
+        ropeScript.move(playerClicked);
     }
 }

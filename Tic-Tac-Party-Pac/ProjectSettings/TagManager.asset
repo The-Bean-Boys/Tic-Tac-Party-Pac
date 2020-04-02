@@ -6,6 +6,8 @@ TagManager:
   tags:
   - XAsset
   - OAsset
+  - DeadZone
+  - ScoreZone
   layers:
   - Default
   - TransparentFX
@@ -54,4 +56,7 @@ TagManager:
     locked: 0
   - name: Front
     uniqueID: 2508878443
+    locked: 0
+  - name: UI
+    uniqueID: 3449750789
     locked: 0

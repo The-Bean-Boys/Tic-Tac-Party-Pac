@@ -10,17 +10,23 @@ public class Score : MonoBehaviour
     void Start()
     {
         score = 0;
+        
+        // assigns static reference(s) from the BalloonManagerStatic to their respective
+        //  score text gameObject(s) 
         if (gameObject.name.Equals("X Score"))
             BalloonManagerStatic.Xtext = this;
         else
             BalloonManagerStatic.Otext = this;
     }
 
+
+    // returns the score value for the score text
     public int getScore()
     {
         return score;
     }
 
+    // increment score & update text
     public void AddScore()
     {
         score++;

@@ -999,12 +999,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685eddbd374d75f459785a271692353c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tapForce: 200
+  tapForce: 250
   tiltSmooth: 2
   startPos: {x: -1.66, y: 1.28, z: 0}
-  id: 0
-  minInput: 0
-  maxInput: 10
 --- !u!1 &1624572967
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,12 +1405,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685eddbd374d75f459785a271692353c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tapForce: 200
+  tapForce: 250
   tiltSmooth: 2
   startPos: {x: -1.66, y: -0.83, z: 0}
-  id: 1
-  minInput: -10
-  maxInput: 0
 --- !u!1 &1850693818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1534,6 +1528,7 @@ GameObject:
   - component: {fileID: 2078322093}
   - component: {fileID: 2078322092}
   - component: {fileID: 2078322095}
+  - component: {fileID: 2078322096}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1623,3 +1618,15 @@ MonoBehaviour:
   startPage: {fileID: 558571501}
   gameOverPage: {fileID: 939504651}
   winnerText: {fileID: 1624572969}
+--- !u!114 &2078322096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078322091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e19ca4d9603c3645b3b63861fc8177d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

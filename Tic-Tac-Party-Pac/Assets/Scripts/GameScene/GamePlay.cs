@@ -13,6 +13,7 @@ public class GamePlay : MonoBehaviour
     public int[] playedCells; //An array of 81 ints, -100 indicates unplayed, 1 is x played, 2 is o played. To keep track of which cells have been played to who
     public int[] playedTiles; //An array of 9, -100 indicates unplayed, 1 is x played, 2 is o played. To keep track of which tiles have been won by who
     public GameObject[] winningLine; //An array of 72 lines to indicate which rows have been won in each won tile
+    public GameObject[] bigWinLine;
     public GameObject[] winningShades;
     public Text xCountText; //The text object of the x counter
     public int xCount; //The int counter of the x counter
@@ -64,6 +65,7 @@ public class GamePlay : MonoBehaviour
         turns++; //Increases turn count
         
         WinnerCheck(WhatTile); //Checks if someone has won the tile
+        GameWinCheck();
         if (turn == 0) //If x is turn
         {
             xCount++; //Increases x count of cells
@@ -176,6 +178,52 @@ public class GamePlay : MonoBehaviour
         {
             playedTiles[WhatTile] = 2;
             winningShades[WhatTile * 2 + 1].SetActive(true);
+        }
+    }
+
+    void GameWinCheck()
+    {
+        bool cat = true;
+        int s1 = playedTiles[0] + playedTiles[1] + playedTiles[2];
+        int s2 = playedTiles[3] + playedTiles[4] + playedTiles[5];
+        int s3 = playedTiles[6] + playedTiles[7] + playedTiles[8];
+        int s4 = playedTiles[0] + playedTiles[3] + playedTiles[6];
+        int s5 = playedTiles[1] + playedTiles[4] + playedTiles[7];
+        int s6 = playedTiles[2] + playedTiles[5] + playedTiles[8];
+        int s7 = playedTiles[0] + playedTiles[4] + playedTiles[8];
+        int s8 = playedTiles[2] + playedTiles[4] + playedTiles[6];
+        var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 };
+
+        for(int i = 0; i < 8; i++)
+        {
+            if(solutions[i] == 3)
+            {
+                Debug.Log("Player X Wins!");
+                bigWinLine[i].SetActive(true);
+            } else if(solutions[i] == 6)
+            {
+                Debug.Log("Player O Wins!");
+                bigWinLine[i].SetActive(true);
+            } else if(solutions[i] < 0)
+            {
+                cat = false;
+            }
+        }
+
+        if (cat)
+        {
+            CatBig();
+        }
+    }
+
+    void CatBig()
+    {
+        if(xCount > oCount)
+        {
+            Debug.Log("Player X Wins!");
+        } else
+        {
+            Debug.Log("Player O Wins!");
         }
     }
 }

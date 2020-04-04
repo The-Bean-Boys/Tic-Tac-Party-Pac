@@ -13,6 +13,7 @@ public class GamePlay : MonoBehaviour
     public int[] playedCells; //An array of 81 ints, -100 indicates unplayed, 1 is x played, 2 is o played. To keep track of which cells have been played to who
     public int[] playedTiles; //An array of 9, -100 indicates unplayed, 1 is x played, 2 is o played. To keep track of which tiles have been won by who
     public GameObject[] winningLine; //An array of 72 lines to indicate which rows have been won in each won tile
+    public GameObject[] winningShades;
     public Text xCountText; //The text object of the x counter
     public int xCount; //The int counter of the x counter
     public Text oCountText; //The text object of the o counter
@@ -87,7 +88,7 @@ public class GamePlay : MonoBehaviour
 
     void WinnerCheck(int WhatTile)
     {
-        
+        bool cat = true;
         int offset = WhatTile * 9; //Calculates the offset of tile (18 is start of 3rd tile, etc.)
         int s1 = playedCells[0 + offset] + playedCells[1 + offset] + playedCells[2 + offset]; //Calculates values of top row
         int s2 = playedCells[3 + offset] + playedCells[4 + offset] + playedCells[5 + offset]; //Calculates values of middle row
@@ -100,6 +101,10 @@ public class GamePlay : MonoBehaviour
         var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
         for(int i = 0; i < solutions.Length; i++) 
         {
+            if(solutions[i] < 0)
+            {
+                cat = false;
+            }
             if(solutions[i] == 3) //If x won (1 + 1 + 1, three xs in a row)
             {
                 WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
@@ -109,6 +114,10 @@ public class GamePlay : MonoBehaviour
                 WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
             }
         }
+        if (cat)
+        {
+            CatGame(WhatTile);
+        }
     }
 
     void WinnerDisplay(int indexIn, int WhatTile)
@@ -116,6 +125,15 @@ public class GamePlay : MonoBehaviour
         int offset = WhatTile * 9; //Offset of the tile
         int lineOffset = WhatTile * 8; //There are only 8 lines for each tile, so the lineOffset multiplier goes down by 1
         winningLine[indexIn + lineOffset].SetActive(true); //Sets the winning line of the tile + the solution tile to active to show
+        if(turn == 0)
+        {
+            winningShades[WhatTile * 2].SetActive(true);
+            playedTiles[WhatTile] = 1;
+        } else
+        {
+            winningShades[WhatTile * 2 + 1].SetActive(true);
+            playedTiles[WhatTile] = 2;
+        }
         for(int i = offset; i < 9 + offset; i++)  //For all cells in the won tile
         {
             if(playedCells[i] < 0) //If it hasn't already been played 
@@ -132,6 +150,32 @@ public class GamePlay : MonoBehaviour
                 UpdateCount(); //Updates the counts
             }
             spaces[i].interactable = false; //Makes the button not interactable
+        }
+    }
+
+    void CatGame(int WhatTile)
+    {
+        int offset = WhatTile * 9;
+        int xCellCount = 0;
+        int oCellCount = 0;
+        for(int i = offset; i < offset + 9; i++)
+        {
+            if(playedCells[i] == 1)
+            {
+                xCellCount++;
+            } else
+            {
+                oCellCount++;
+            }
+        }
+        if(xCellCount > oCellCount)
+        {
+            playedTiles[WhatTile] = 1;
+            winningShades[WhatTile * 2].SetActive(true);
+        } else
+        {
+            playedTiles[WhatTile] = 2;
+            winningShades[WhatTile * 2 + 1].SetActive(true);
         }
     }
 }

@@ -532,6 +532,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 377110514}
   m_CullTransparentMesh: 0
+--- !u!1 &397259979
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 397259980}
+  - component: {fileID: 397259981}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &397259980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397259979}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.000015258789, y: -0.000030517578, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &397259981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397259979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 263252ddc45e45d478d713dadb664fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  operationTextBox: {fileID: 3446488}
+  resultTextBox: {fileID: 1912689615}
+  optionA: {fileID: 693722388}
+  optionB: {fileID: 1255826681}
+  optionC: {fileID: 1734923311}
+  optionD: {fileID: 1831835776}
+  optionE: {fileID: 377110514}
+  optionF: {fileID: 1409135003}
 --- !u!1 &505547271
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,8 +1297,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Choose the numbers that, when put together using the operation below, make
-    the number below.
+  m_Text: Choose the pair of numbers that, when put together using the operation
+    below, make the number below.
 --- !u!222 &1400868576
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1832,7 +1883,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 17
+  m_Text: 200
 --- !u!222 &1912689618
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -14,4 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Horse Minigame.unity
     guid: a83895dcdcde9a648a7f64c3bfa7b327
+  - enabled: 1
+    path: Assets/Scenes/FlappyXO.unity
+    guid: 81e121f8303f7814e854125a4ff0bbdd
+  - enabled: 1
+    path: Assets/Scenes/Balloon Minigame.unity
+    guid: f0c8a251951eee8489b70c4e02c45ee0
+  - enabled: 1
+    path: Assets/Scenes/SimonSays.unity
+    guid: 97a6d91354cf5f243bd2b20b741a8a1d
+  - enabled: 1
+    path: Assets/Scenes/Tug-of-War Minigame.unity
+    guid: a5d991b37a26f6a40b32d8e5f229f9ff
   m_configObjects: {}

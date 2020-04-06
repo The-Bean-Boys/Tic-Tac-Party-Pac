@@ -21,7 +21,7 @@ public class BalloonHandler : MonoBehaviour
     }
 
     // works well as an "on tap" as well
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
         // if not yet popped
         if (!popped)

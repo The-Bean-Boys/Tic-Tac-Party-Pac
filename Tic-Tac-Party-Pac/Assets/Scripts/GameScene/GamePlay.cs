@@ -212,18 +212,15 @@ public class GamePlay : MonoBehaviour
 
         if (cat)
         {
-            CatBig();
+            if (xCount > oCount)
+            {
+                Debug.Log("Player X Wins!");
+            }
+            else
+            {
+                Debug.Log("Player O Wins!");
+            }
         }
     }
 
-    void CatBig()
-    {
-        if(xCount > oCount)
-        {
-            Debug.Log("Player X Wins!");
-        } else
-        {
-            Debug.Log("Player O Wins!");
-        }
-    }
 }

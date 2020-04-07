@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GamePlay : MonoBehaviour
@@ -19,6 +20,9 @@ public class GamePlay : MonoBehaviour
     public int xCount; //The int counter of the x counter
     public Text oCountText; //The text object of the o counter
     public int oCount; //The text object of the o counter
+    public GameObject gameOverPage; // game over UI page
+    public Text winnerText;
+    public GameObject gameBoard; // parent object of the full game board
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +30,11 @@ public class GamePlay : MonoBehaviour
         GameSetup(); //On startup, calls GameSetup
     }
     
-    void GameSetup()
+    public void GameSetup()
     {
+        gameOverPage.SetActive(false);
+        gameBoard.SetActive(true);
+
         turn = 0; //Sets the turn count to 0
         turns = 0; //Sets turns count to 0
         xCount = 0; //Sets x count to 0
@@ -49,6 +56,18 @@ public class GamePlay : MonoBehaviour
         for(int i = 0; i < playedTiles.Length; i++)
         {
             playedTiles[i] = -100; //Sets all the playedTiles to not won (-100)
+        }
+        for (int i = 0; i < winningLine.Length; i++)
+        {
+            winningLine[i].SetActive(false);
+        }
+        for (int i = 0; i < winningShades.Length; i++)
+        {
+            winningShades[i].SetActive(false);
+        }
+        for (int i = 0; i < bigWinLine.Length; i++)
+        {
+            bigWinLine[i].SetActive(false);
         }
     }
     
@@ -198,11 +217,11 @@ public class GamePlay : MonoBehaviour
         {
             if(solutions[i] == 3)
             {
-                Debug.Log("Player X Wins!");
+                GameOver(0);
                 bigWinLine[i].SetActive(true);
             } else if(solutions[i] == 6)
             {
-                Debug.Log("Player O Wins!");
+                GameOver(1);
                 bigWinLine[i].SetActive(true);
             } else if(solutions[i] < 0)
             {
@@ -220,10 +239,41 @@ public class GamePlay : MonoBehaviour
     {
         if(xCount > oCount)
         {
-            Debug.Log("Player X Wins!");
+            GameOver(0);
         } else
         {
-            Debug.Log("Player O Wins!");
+            GameOver(1);
         }
+    }
+
+    /* Call when game is over
+     * @param winner - pass the value of who won
+     *      0 - X wins
+     *      1 - O wins
+     */
+    void GameOver(int winner)
+    {
+        for (int i = 0; i < spaces.Length; i++)
+        {
+            spaces[i].interactable = false;
+        }
+        turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+
+        if (winner == 0) { winnerText.text = "X wins!"; } else { winnerText.text = "O wins!"; }
+
+        Invoke("DisableBoard", 3);
+    }
+
+    // Disable game board and enable game over page
+    void DisableBoard()
+    {
+        gameBoard.SetActive(false);
+        gameOverPage.SetActive(true);
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 }

@@ -233,25 +233,15 @@ public class GamePlay : MonoBehaviour
         {
             if (xCount > oCount)
             {
-                Debug.Log("Player X Wins!");
+                GameOver(0);
             }
             else
             {
-                Debug.Log("Player O Wins!");
+                GameOver(1);
             }
         }
     }
     
-    void CatBig()
-    {
-        if(xCount > oCount)
-        {
-            GameOver(0);
-        } else
-        {
-            GameOver(1);
-        }
-    }
 
     /* Call when game is over
      * @param winner - pass the value of who won

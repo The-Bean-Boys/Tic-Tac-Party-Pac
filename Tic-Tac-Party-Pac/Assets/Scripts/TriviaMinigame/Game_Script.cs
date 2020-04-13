@@ -24,6 +24,7 @@ public class Game_Script : MonoBehaviour
     public GameObject Choice4;              // Button 4
     public GameObject playerTwoStart;       // Button to start second game
     public GameObject winnerDisplay;        // Displays the winner of the minigame
+    public GameObject playAgainButton;      // Button to settle tie games
 
     float timerCount;                       // How long each player gets to answer questions
     int winner;                             // Keeps track of who won
@@ -33,11 +34,12 @@ public class Game_Script : MonoBehaviour
     "What is the world's largest ocean?", "What is the world's longest river?", "Approximately what is the diameter of Earth?", "What is the capital city of Spain?", "Which chess piece can only move diagonally?",
     "Which of these colors is NOT a primary color?", "When did the Cold War end?", "Which country consumes the most chocolate per capita?", "What is a duel between three people called?",
     "What was the first toy to be advertised on television?", "Kylo Ren from Star Wars is the grandson of:", "What is the smallest bone in the human body?", 
-    "Which state produced nearly half of America's rice between 2014 and 2019?"};
+    "Which state produced nearly half of America's rice between 2014 and 2019?", "What is the largest continent?", "What year was Microsoft founded?", "How many degrees are in a circle?",
+    "How many years is a century?"};
 
     // Array of all corresponding question answers
     public string[] answerKey = {"Lansing", "Lake Superior", "Sword", "Greenland", "Pacific", "Nile", "8000 mi", "Madrid", "Bishop", "Green", "1991", "Switzerland", "Truel", "Mr. Potato Head", "Anakin Skywalker", 
-    "Stapes", "Arkansas"};
+    "Stapes", "Arkansas", "Asia", "1975", "360", "100"};
 
     // 2D array of all corresponding question choices
     // 2 1 3 4 is the pattern of right answers in each sub array
@@ -45,15 +47,21 @@ public class Game_Script : MonoBehaviour
     {"Madagascar", "Iceland", "Ireland", "Greenland"}, {"Atlantic", "Pacific", "Indian", "Arctic"}, {"Nile", "Amazon", "Mississippi", "Congo"}, {"6000 mi", "12000 mi", "8000 mi", "10000 mi"}, 
     {"Barcelona", "Seville", "Toledo", "Madrid"}, {"Rook", "Bishop", "Queen", "Pawn"}, {"Green", "Red", "Yellow", "Blue"}, {"1970", "1985", "1991", "2000"}, {"Germany", "Russia", "United States", "Switzerland"}, 
     {"Deadlock", "Truel", "Trinity", "Standoff"}, {"Mr. Potato Head", "Rocking Horse", "LEGOs", "Lincoln Logs"}, {"Han Solo", "Sheev Palpatine", "Anakin Skywalker", "Luke Skywalker"}, 
-    {"Femur", "Patella", "Tibia", "Stapes"}, {"California", "Arkansas", "Iowa", "New York"}};
+    {"Femur", "Patella", "Tibia", "Stapes"}, {"California", "Arkansas", "Iowa", "New York"}, {"Asia", "North America", "Europe", "Australia"}, {"1980", "1968", "1975", "1992"}, {"270", "180", "90", "360"},
+    {"10", "100", "1000", "10000"}};
 
     public ArrayList usedQuestions;    // Store the indeces of used question prompts here
     
     // Start is called before the first frame update
     public void Start()
     {
+
+        Random.InitState(System.Environment.TickCount);
+        Debug.Log(System.Environment.TickCount);
+
         playerTwoStart.SetActive(false);
         winnerDisplay.SetActive(false);
+        playAgainButton.SetActive(false);
 
         // Display as question 1
         questionCounter.GetComponent<TMPro.TextMeshProUGUI>().text = "Question #1";
@@ -101,16 +109,18 @@ public class Game_Script : MonoBehaviour
         if (playerAnswer == correctAnswer){
             if (playerActive == 1){
                 playerOneScore++;
-                Debug.Log("Player 1 Score: " + playerOneScore);
+                //Debug.Log("Player 1 Score: " + playerOneScore);
             }
             else{
                 playerTwoScore++;
-                Debug.Log("Player 2 Score: " + playerTwoScore);
+                //Debug.Log("Player 2 Score: " + playerTwoScore);
             }
         }
 
         // Get new question
+        //Random.state = new System.DateTime().Millisecond;
         currentIndex = Random.Range(0, QPrompts.Length);
+        Debug.Log("Current Index: " + currentIndex);
 
         // This is a new question
         if (usedQuestions.IndexOf(currentIndex) == -1){
@@ -122,6 +132,7 @@ public class Game_Script : MonoBehaviour
 
             // Loop until new question is found
             while (usedQuestions.IndexOf(currentIndex) != -1){
+                //Random.state = new System.DateTime().Millisecond;
                 currentIndex = Random.Range(0, QPrompts.Length);    // Search for new question
             }
             usedQuestions.Add(currentIndex);                        // Add the new question to usedQuestions list
@@ -158,6 +169,10 @@ public class Game_Script : MonoBehaviour
                 }
                 else if (winner == 2){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
+                }
+                else{
+                    winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Tie Game!";
+                    playAgainButton.SetActive(true);
                 }
             }
             return;
@@ -219,6 +234,10 @@ public class Game_Script : MonoBehaviour
                     else if (winner == 2){
                         winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
                     }
+                    else{
+                        winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Tie Game!";
+                        playAgainButton.SetActive(true);
+                    }
                 }
                 return;
             }
@@ -239,5 +258,12 @@ public class Game_Script : MonoBehaviour
             winner = 0;
             Debug.Log("Tie Game!");
         }
+    }
+
+    public void replayGame(){
+        playerOneScore = 0;
+        playerTwoScore = 0;
+        playerActive = 0;
+        Start();
     }
 }

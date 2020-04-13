@@ -29,7 +29,7 @@ public class GamePlay : MonoBehaviour
     {
         GameSetup(); //On startup, calls GameSetup
     }
-    
+
     public void GameSetup()
     {
         gameOverPage.SetActive(false);
@@ -44,16 +44,16 @@ public class GamePlay : MonoBehaviour
         turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets the x picture to bright (brightness indicates turn)
         turnIcons[1].SetActive(true); //Sets turn icon to true for o picture
         turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o picture to half brightness (not turn)
-        for(int i = 0; i < spaces.Length; i++)
+        for (int i = 0; i < spaces.Length; i++)
         {
             spaces[i].interactable = true; //Sets all the game spaces to interactable
             spaces[i].image.sprite = playIcons[3]; //Sets all the game spaces to grey tiles
         }
-        for(int i = 0; i < playedCells.Length; i++)
+        for (int i = 0; i < playedCells.Length; i++)
         {
             playedCells[i] = -100; //Sets all the playedCells to not played (-100)
         }
-        for(int i = 0; i < playedTiles.Length; i++)
+        for (int i = 0; i < playedTiles.Length; i++)
         {
             playedTiles[i] = -100; //Sets all the playedTiles to not won (-100)
         }
@@ -70,11 +70,11 @@ public class GamePlay : MonoBehaviour
             bigWinLine[i].SetActive(false);
         }
     }
-    
+
     public void TicTacToe(int WhatButton) //Called when clicked by a button, WhatButton is int of button clicked
     {
         int WhatTile = WhatButton / 9; //Calculates the tile holding the cell
-        
+
         spaces[WhatButton].GetComponent<Image>().sprite = null; //Sets the button image to null
         spaces[WhatButton].image.sprite = playIcons[turn]; //Sets the image of button to the player whos turn it is
         spaces[WhatButton].interactable = false; //Turns off the interaction of the button
@@ -82,7 +82,7 @@ public class GamePlay : MonoBehaviour
         playedCells[WhatButton] = turn + 1; //Sets playedCells of that button to 1 + the turn (1 for x, 2 for o)
 
         turns++; //Increases turn count
-        
+
         WinnerCheck(WhatTile); //Checks if someone has won the tile
         GameWinCheck();
         if (turn == 0) //If x is turn
@@ -99,6 +99,8 @@ public class GamePlay : MonoBehaviour
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
         }
         UpdateCount(); //Updates the text components to the counters
+      
+        SceneManager.LoadScene("SimonSays");
     }
 
     void UpdateCount()
@@ -120,17 +122,17 @@ public class GamePlay : MonoBehaviour
         int s7 = playedCells[0 + offset] + playedCells[4 + offset] + playedCells[8 + offset]; //Calculates values of left top to bottom right diagonal
         int s8 = playedCells[2 + offset] + playedCells[4 + offset] + playedCells[6 + offset]; //Calculates values of top right to bottom left diagonal
         var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
-        for(int i = 0; i < solutions.Length; i++) 
+        for (int i = 0; i < solutions.Length; i++)
         {
-            if(solutions[i] < 0)
+            if (solutions[i] < 0)
             {
                 cat = false;
             }
-            if(solutions[i] == 3) //If x won (1 + 1 + 1, three xs in a row)
+            if (solutions[i] == 3) //If x won (1 + 1 + 1, three xs in a row)
             {
                 WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
 
-            } else if(solutions[i] == 6) //If o won (2 + 2 + 2, three os in a row)
+            } else if (solutions[i] == 6) //If o won (2 + 2 + 2, three os in a row)
             {
                 WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
             }
@@ -146,7 +148,7 @@ public class GamePlay : MonoBehaviour
         int offset = WhatTile * 9; //Offset of the tile
         int lineOffset = WhatTile * 8; //There are only 8 lines for each tile, so the lineOffset multiplier goes down by 1
         winningLine[indexIn + lineOffset].SetActive(true); //Sets the winning line of the tile + the solution tile to active to show
-        if(turn == 0)
+        if (turn == 0)
         {
             winningShades[WhatTile * 2].SetActive(true);
             playedTiles[WhatTile] = 1;
@@ -155,13 +157,13 @@ public class GamePlay : MonoBehaviour
             winningShades[WhatTile * 2 + 1].SetActive(true);
             playedTiles[WhatTile] = 2;
         }
-        for(int i = offset; i < 9 + offset; i++)  //For all cells in the won tile
+        for (int i = offset; i < 9 + offset; i++)  //For all cells in the won tile
         {
-            if(playedCells[i] < 0) //If it hasn't already been played 
+            if (playedCells[i] < 0) //If it hasn't already been played 
             {
                 playedCells[i] = turn + 1; //Set it to the turn + 1
                 spaces[i].image.sprite = playIcons[turn]; //Sets the image of the button to the image of the player who won the tile's counter
-                if(turn == 0)
+                if (turn == 0)
                 {
                     xCount++; //Increase the x Count if x won the tile
                 } else
@@ -179,9 +181,9 @@ public class GamePlay : MonoBehaviour
         int offset = WhatTile * 9;
         int xCellCount = 0;
         int oCellCount = 0;
-        for(int i = offset; i < offset + 9; i++)
+        for (int i = offset; i < offset + 9; i++)
         {
-            if(playedCells[i] == 1)
+            if (playedCells[i] == 1)
             {
                 xCellCount++;
             } else
@@ -189,7 +191,7 @@ public class GamePlay : MonoBehaviour
                 oCellCount++;
             }
         }
-        if(xCellCount > oCellCount)
+        if (xCellCount > oCellCount)
         {
             playedTiles[WhatTile] = 1;
             winningShades[WhatTile * 2].SetActive(true);
@@ -213,17 +215,17 @@ public class GamePlay : MonoBehaviour
         int s8 = playedTiles[2] + playedTiles[4] + playedTiles[6];
         var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 };
 
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
-            if(solutions[i] == 3)
+            if (solutions[i] == 3)
             {
                 GameOver(0);
                 bigWinLine[i].SetActive(true);
-            } else if(solutions[i] == 6)
+            } else if (solutions[i] == 6)
             {
                 GameOver(1);
                 bigWinLine[i].SetActive(true);
-            } else if(solutions[i] < 0)
+            } else if (solutions[i] < 0)
             {
                 cat = false;
             }
@@ -241,7 +243,7 @@ public class GamePlay : MonoBehaviour
             }
         }
     }
-    
+
 
     /* Call when game is over
      * @param winner - pass the value of who won

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SimonGameState : MonoBehaviour
@@ -13,7 +14,7 @@ public class SimonGameState : MonoBehaviour
     public GameObject RoundText;
     public GameObject Canvas;
     SimonFinish SF;
-
+  
     public void Start()
     {
         Sequence = new List<string>();
@@ -48,11 +49,13 @@ public class SimonGameState : MonoBehaviour
         {
             if (PlayerTurn.Equals("Player One"))
             {
-                SF.SimonWins("Player Two");
+                SF.SimonWins("X");
+                SceneManager.LoadScene("GameScene");
             }
             else
             {
-                SF.SimonWins("Player One");
+                SF.SimonWins("O");
+                SceneManager.LoadScene("GameScene");
             }
         }
     }

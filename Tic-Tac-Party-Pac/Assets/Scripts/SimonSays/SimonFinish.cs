@@ -8,6 +8,7 @@ public class SimonFinish : MonoBehaviour
     public GameObject Game;
     public GameObject Win;
     GameObject WinText;
+
     int tmp = 0;
     int change = 60;
     public void Start()

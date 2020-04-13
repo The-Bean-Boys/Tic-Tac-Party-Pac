@@ -7,10 +7,10 @@ public class Score : MonoBehaviour
     private int score;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         score = 0;
-        
+        gameObject.GetComponent<TMPro.TextMeshPro>().text = score.ToString();
         // assigns static reference(s) from the BalloonManagerStatic to their respective
         //  score text gameObject(s) 
         if (gameObject.name.Equals("X Score"))

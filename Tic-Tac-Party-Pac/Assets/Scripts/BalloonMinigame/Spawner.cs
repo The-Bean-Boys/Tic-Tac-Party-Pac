@@ -9,12 +9,14 @@ public class Spawner : MonoBehaviour
     public GameObject Balloon_g;
 
     public GameObject winnerText;
+    public GameObject replayButton;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         // hide winner text
         winnerText.SetActive(false);
+        replayButton.SetActive(false);
         InvokeRepeating("Spawning", 0, .5f); // call the spawn function every .5 seconds
         Invoke("StopIt", 15); // call StopIt(), which runs the end of minigame function
     }
@@ -78,6 +80,7 @@ public class Spawner : MonoBehaviour
         } else
         {
             winnerText.GetComponent<TMPro.TextMeshPro>().text = "A tie?";
+            replayButton.SetActive(true);
         }
         winnerText.SetActive(true); // enable winner text
     }

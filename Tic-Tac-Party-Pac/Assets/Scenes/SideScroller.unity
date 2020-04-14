@@ -442,7 +442,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546434321}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.34, y: -2.96, z: 28.919285}
+  m_LocalPosition: {x: 19.34, y: -4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1167,11 +1167,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3972df990df284aa0fd0f7b78f50a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: 8
+  scrollSpeed: 10
   challenges:
   - {fileID: 5492709741932987554, guid: 7107047743afe8647a571a8a6e8e28ac, type: 3}
-  - {fileID: 6531478064459378976, guid: 80d6529600974d74c987c8ce86407199, type: 3}
-  freq: 0.5
+  - {fileID: 203817136572480940, guid: 19a0793eedd526e48955d95d3e447697, type: 3}
+  - {fileID: 131860103678392987, guid: bec845d41bbbab54faf3817e6aaa4742, type: 3}
+  freq: 0.75
   challengesSpawnPoint: {fileID: 546434322}
 --- !u!1 &1404829052
 GameObject:
@@ -1269,7 +1270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1412088390
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1328,8 +1329,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1412088389}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.21, y: -2.883, z: 0}
-  m_LocalScale: {x: 0.288, y: 0.288, z: 1}
+  m_LocalPosition: {x: -5.5, y: -3.4, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_Children:
   - {fileID: 706547064}
   m_Father: {fileID: 0}
@@ -1347,9 +1348,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc422f157af50464e95780f559e9b150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpPower: 10
-  posX: -4.21
-  startPos: {x: -4.21, y: -2.883, z: 0}
+  jumpPower: 7.5
+  posX: -5.5
+  startPos: {x: -5.5, y: -3.4, z: 0}
 --- !u!50 &1412088393
 Rigidbody2D:
   serializedVersion: 4
@@ -1588,8 +1589,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2054493497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.21, y: -2.883, z: 0}
-  m_LocalScale: {x: 0.288, y: 0.288, z: 1}
+  m_LocalPosition: {x: -5.5, y: -3.4, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_Children:
   - {fileID: 2084392044}
   m_Father: {fileID: 0}
@@ -1607,9 +1608,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc422f157af50464e95780f559e9b150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpPower: 10
-  posX: -4.21
-  startPos: {x: -4.21, y: -2.883, z: 0}
+  jumpPower: 7.5
+  posX: -5.5
+  startPos: {x: -5.5, y: -3.4, z: 0}
 --- !u!50 &2054493501
 Rigidbody2D:
   serializedVersion: 4

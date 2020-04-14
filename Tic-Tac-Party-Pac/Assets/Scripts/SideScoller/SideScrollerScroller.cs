@@ -59,7 +59,7 @@ public class SideScrollerScroller : MonoBehaviour
         {
             currentChild = transform.GetChild(i).gameObject;
             ScrollChallenge(currentChild);
-            if (currentChild.transform.position.x <= -15)
+            if (currentChild.transform.position.x <= -20)
             {
                 Destroy(currentChild);
             }

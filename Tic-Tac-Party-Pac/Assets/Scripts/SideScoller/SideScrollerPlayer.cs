@@ -14,6 +14,7 @@ public class SideScrollerPlayer : MonoBehaviour
 
     new Rigidbody2D rb;
     private bool isGrounded = false;
+    private bool landed = false;
 
     SideScrollerManager Manager;
 
@@ -55,6 +56,9 @@ public class SideScrollerPlayer : MonoBehaviour
     {
         if (Manager.startPage.activeSelf || Manager.gameOverPage.activeSelf) { return; }
 
+        if (Input.GetKey(KeyCode.Space))
+            Jump();
+
         //Hit in face
         if (transform.position.x < posX-.1)
         {
@@ -66,9 +70,10 @@ public class SideScrollerPlayer : MonoBehaviour
     {
         if (Manager.startPage.activeSelf || Manager.gameOverPage.activeSelf) { return; }
 
-        if (isGrounded)
+        if (isGrounded && landed)
         {
             rb.AddForce(Vector3.up * (jumpPower * rb.mass * rb.gravityScale * 20.0f));
+            landed = false;
         }
     }
 
@@ -83,6 +88,7 @@ public class SideScrollerPlayer : MonoBehaviour
         if (col.collider.tag == "Ground")
         {
             isGrounded = true;
+            landed = true;
         }
         if (col.gameObject.tag == "DeadZone")
         {

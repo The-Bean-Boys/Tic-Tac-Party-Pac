@@ -27,14 +27,22 @@ public class GamePlay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameSetup(); //On startup, calls GameSetup
+        int played = PlayerPrefs.GetInt("Playing");
+        if (played == 0)
+        {
+            PlayerPrefs.SetInt("Playing", 1);
+            GameSetup(); //On startup, calls GameSetup
+        } else
+        {
+            GameRedo();
+        }
     }
 
     public void GameSetup()
     {
         gameOverPage.SetActive(false);
         gameBoard.SetActive(true);
-
+        
         turn = 0; //Sets the turn count to 0
         turns = 0; //Sets turns count to 0
         xCount = 0; //Sets x count to 0
@@ -71,6 +79,36 @@ public class GamePlay : MonoBehaviour
         }
     }
 
+    public void GameRedo()
+    {
+        turn = PlayerPrefs.GetInt("Turn");
+        turns = PlayerPrefs.GetInt("Turns");
+        xCount = PlayerPrefs.GetInt("XCount");
+        oCount = PlayerPrefs.GetInt("OCount");
+        for(int i = 0; i < 81; i++)
+        {
+            playedCells[i] = PlayerPrefs.GetInt("PlayedCells" + i);
+            if(playedCells[i] == 1)
+            {
+                spaces[i].image.sprite = playIcons[0];
+                spaces[i].interactable = false;
+            } else if(playedCells[i] == 2)
+            {
+                spaces[i].image.sprite = playIcons[1];
+                spaces[i].interactable = false;
+            } else
+            {
+                spaces[i].image.sprite = playIcons[3];
+                spaces[i].interactable = true;
+            }
+        }
+        for(int i = 0; i < 9; i++)
+        {
+            WinnerCheck(i);
+        }
+        UpdateCount();
+    }
+
     public void TicTacToe(int WhatButton) //Called when clicked by a button, WhatButton is int of button clicked
     {
         int WhatTile = WhatButton / 9; //Calculates the tile holding the cell
@@ -99,8 +137,19 @@ public class GamePlay : MonoBehaviour
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
         }
         UpdateCount(); //Updates the text components to the counters
-      
-        SceneManager.LoadScene("SimonSays");
+
+        if (turns == 5)
+        {
+            for(int i = 0; i < playedCells.Length; i++)
+            {
+                PlayerPrefs.SetInt("PlayedCells" + i, playedCells[i]);
+            }
+            PlayerPrefs.SetInt("Turn", turn);
+            PlayerPrefs.SetInt("Turns", turns);
+            PlayerPrefs.SetInt("XCount", xCount);
+            PlayerPrefs.SetInt("OCount",oCount);
+            SceneManager.LoadScene("SimonSays");
+        }
     }
 
     void UpdateCount()

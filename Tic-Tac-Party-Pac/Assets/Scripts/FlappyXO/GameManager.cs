@@ -117,12 +117,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        SetPageState(PageState.Start);
+    }
+
     // sends out OnGameStarted event and sets game to active pagestate
     public void StartGame()
     {
         OnGameStarted();
         gameOver = false;
         SetPageState(PageState.None);
+    }
+
+    public void SetStartPage(GameObject GO)
+    {
+        startPage = GO;
     }
 
 }

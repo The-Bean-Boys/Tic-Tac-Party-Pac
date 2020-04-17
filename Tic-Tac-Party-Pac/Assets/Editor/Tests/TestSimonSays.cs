@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Tests
 {
@@ -60,19 +61,17 @@ namespace Tests
         }
 
         [UnityTest]
-        public IEnumerator TestP1Win()
+        public IEnumerator TestWins()
         {
             SH.Clicked("Red");
             yield return new WaitForFixedUpdate();
             SH.Clicked("Blue");
-            yield return new WaitForFixedUpdate();
-            Assert.True(Winner.activeSelf);
-            Assert.False(Game.activeSelf);
-            Assert.AreEqual("Player One Wins", Winner.transform.GetChild(0).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text);
+            yield return new WaitForSeconds(0.3f);
+            Assert.AreEqual("GameScene", SceneManager.GetActiveScene().name);
         }
 
         [UnityTest]
-        public IEnumerator TestP2Win()
+        public IEnumerator TestDouble()
         {
             SH.Clicked("Red");
             yield return new WaitForFixedUpdate();
@@ -80,11 +79,9 @@ namespace Tests
             yield return new WaitForFixedUpdate();
             SH.Clicked("Blue");
             yield return new WaitForFixedUpdate();
-            SH.Clicked("Blue");
-            yield return new WaitForFixedUpdate();
-            Assert.True(Winner.activeSelf);
-            Assert.False(Game.activeSelf);
-            Assert.AreEqual("Player Two Wins", Winner.transform.GetChild(0).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text);
+            Assert.AreEqual("Player One", Game.transform.GetChild(0).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text);
+            Assert.AreEqual(new Color(0, 60 / 255f, 255 / 255f), Game.transform.GetChild(3).gameObject.GetComponent<Image>().color);
+            Assert.AreEqual("Round 3", Game.transform.GetChild(4).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text);
         }
 
     }

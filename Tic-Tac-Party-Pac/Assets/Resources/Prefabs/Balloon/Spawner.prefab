@@ -54,3 +54,5 @@ MonoBehaviour:
     type: 3}
   winnerText: {fileID: 103890633447287735, guid: aa78fd2ee6b821f4892b603967f28996,
     type: 3}
+  replayButton: {fileID: 4486964817407257987, guid: 7e3331bbc55a76444a12932b1569b683,
+    type: 3}

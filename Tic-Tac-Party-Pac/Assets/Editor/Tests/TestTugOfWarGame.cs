@@ -67,7 +67,7 @@ namespace Tests
             Assert.Greater(X3 - X2, X2 - X1);
         }
         [UnityTest]
-        public IEnumerator TestPLWins()
+        public IEnumerator TestWins()
         {
             RH.move("LButton");
             RH.move("LButton");
@@ -76,22 +76,7 @@ namespace Tests
             RH.move("LButton");
             Time.timeScale = 100.0f;
             yield return new WaitForSeconds(50.0f);
-            Assert.IsTrue(winner.activeSelf);
-            Assert.AreEqual("Winner: Player 1", winner.GetComponent<TMPro.TextMeshProUGUI>().text);
-            Time.timeScale = 1.0f;
-        }
-        [UnityTest]
-        public IEnumerator TestPRWins()
-        {
-            RH.move("RButton");
-            RH.move("RButton");
-            RH.move("RButton");
-            RH.move("RButton");
-            RH.move("RButton");
-            Time.timeScale = 100.0f;
-            yield return new WaitForSeconds(50.0f);
-            Assert.IsTrue(winner.activeSelf);
-            Assert.AreEqual("Winner: Player 2", winner.GetComponent<TMPro.TextMeshProUGUI>().text);
+            Assert.AreEqual("GameScene", SceneManager.GetActiveScene().name);
             Time.timeScale = 1.0f;
         }
     }

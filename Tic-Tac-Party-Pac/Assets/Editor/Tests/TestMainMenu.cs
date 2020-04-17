@@ -34,7 +34,6 @@ namespace Tests
         [UnityTest]
         public IEnumerator TestPlayGame()
         {
-            Assert.AreNotEqual("GameScene", SceneManager.GetActiveScene().name);
             MM.PlayGame();
             yield return new WaitForSeconds(0.1f);
             Assert.AreEqual("GameScene", SceneManager.GetActiveScene().name);

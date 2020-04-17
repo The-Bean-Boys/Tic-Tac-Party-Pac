@@ -8,8 +8,7 @@ public class MMButtonHandler : MonoBehaviour
     int whoseTurn; // 0 = player1, 1 = player2
     int result; //the number displayed in the top right box; the answer to the math problem.
     int operation; // the operation: 1 = addition, 2 = subtraction, 3 = multiplication, 4 = division
-    int score0;
-    int score1; // scores for players 1 and 2.
+    int[] score;
     public GameObject operationTextBox;
     public GameObject resultTextBox;
     public GameObject optionA;
@@ -19,15 +18,15 @@ public class MMButtonHandler : MonoBehaviour
     public GameObject optionE;
     public GameObject optionF;
     int opA, opB, opC, opD, opE, opF;
-    int count;
+    int count; //number of buttons pressed
+    int sum;
 
     // Start is called before the first frame update
     void Start()
     {
         whoseTurn = 0;
-        score0 = 0;
-        score1 = 0;
-        count = 20;
+        score = new int[] { 0, 0 };
+        //count = 20;
         GenerateProblem();
     }
 
@@ -35,6 +34,9 @@ public class MMButtonHandler : MonoBehaviour
     {
         result = Random.Range(1, 20);
         operation = Random.Range(1, 3);
+
+        sum = 0;
+        count = 0;
 
         
         // setting the result box
@@ -79,11 +81,85 @@ public class MMButtonHandler : MonoBehaviour
 
     }
 
-    public void ButtonPressed()
+    //handles the things that need to happen, regardless of which button is pressed. called from each ButtonXPressed() method
+    public void ButtonPressed(int value)
     {
+        switch (operation)
+        {
+            case 1:
+                //addition
+                sum += value;
+                break;
+            case 2:
+                //subtraction
+                if (count == 0)
+                    sum = value;
+                else
+                    sum -= value;
+                break;
+            case 3:
+                //multiplication
+                if (count == 0)
+                    sum = 1;
+                sum *= value;
+                break;
+            case 4:
+                //division
+                if (count == 0)
+                    sum = value;
+                else
+                    sum /= value;
+                break;
+        }
+
+
         // working on handling when the buttons are pressed.
         count++;
+        if (count == 2)
+        {
+            if (sum == result)
+            {
+                score[whoseTurn]++;
+            }
 
+            GenerateProblem(); //this method resets sum and count.
+        }
+    }
+
+    public void ButtonAPressed()
+    {
+        int value = int.Parse(optionA.ToString());
+        ButtonPressed(value);
+    }
+
+    public void ButtonBPressed()
+    {
+        int value = int.Parse(optionB.ToString());
+        ButtonPressed(value);
+    }
+
+    public void ButtonCPressed()
+    {
+        int value = int.Parse(optionC.ToString());
+        ButtonPressed(value);
+    }
+
+    public void ButtonDPressed()
+    {
+        int value = int.Parse(optionD.ToString());
+        ButtonPressed(value);
+    }
+
+    public void ButtonEPressed()
+    {
+        int value = int.Parse(optionE.ToString());
+        ButtonPressed(value);
+    }
+
+    public void ButtonFPressed()
+    {
+        int value = int.Parse(optionF.ToString());
+        ButtonPressed(value);
     }
 
 

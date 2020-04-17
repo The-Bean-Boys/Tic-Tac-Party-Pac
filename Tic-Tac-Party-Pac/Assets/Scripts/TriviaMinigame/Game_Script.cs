@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game_Script : MonoBehaviour
@@ -166,11 +167,16 @@ public class Game_Script : MonoBehaviour
                 // Display the winner
                 if (winner == 1){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 1 Wins!";
+                    PlayerPrefs.SetInt("WinnerTrivia", 0);
+                    Invoke("MinigameOver", 5);
                 }
                 else if (winner == 2){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
+                    PlayerPrefs.SetInt("WinnerTrivia", 1);
+                    Invoke("MinigameOver", 5);
                 }
-                else{
+                else
+                {
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Tie Game!";
                     playAgainButton.SetActive(true);
                 }
@@ -265,5 +271,11 @@ public class Game_Script : MonoBehaviour
         playerTwoScore = 0;
         playerActive = 0;
         Start();
+    }
+
+    // Return to main game scene
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

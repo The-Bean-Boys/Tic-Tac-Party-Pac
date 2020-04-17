@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -74,14 +75,23 @@ public class Spawner : MonoBehaviour
         if (BalloonManagerStatic.Xtext.getScore() > BalloonManagerStatic.Otext.getScore())
         {
             winnerText.GetComponent<TMPro.TextMeshPro>().text = "X Wins!";
+            PlayerPrefs.SetInt("WinnerBalloon", 0);
         } else if (BalloonManagerStatic.Xtext.getScore() < BalloonManagerStatic.Otext.getScore())
         {
             winnerText.GetComponent<TMPro.TextMeshPro>().text = "O Wins!";
+            PlayerPrefs.SetInt("WinnerBalloon", 1);
         } else
         {
             winnerText.GetComponent<TMPro.TextMeshPro>().text = "A tie?";
             replayButton.SetActive(true);
         }
         winnerText.SetActive(true); // enable winner text
+        Invoke("MinigameOver", 5);
+    }
+
+    // Return to main game scene
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

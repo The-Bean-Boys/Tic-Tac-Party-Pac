@@ -50,14 +50,12 @@ public class SimonGameState : MonoBehaviour
             if (PlayerTurn.Equals("Player One"))
             {
                 SF.SimonWins("X");
-                PlayerPrefs.SetInt("SSWinner", 0);
-                SceneManager.LoadScene("GameScene");
+                PlayerPrefs.SetInt("WinnerSimon", 0);
             }
             else
             {
                 SF.SimonWins("O");
-                PlayerPrefs.SetInt("SSWinner", 1);
-                SceneManager.LoadScene("GameScene");
+                PlayerPrefs.SetInt("WinnerSimon", 1);
             }
         }
     }
@@ -118,5 +116,11 @@ public class SimonGameState : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    // Return to main game scene
+    public void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

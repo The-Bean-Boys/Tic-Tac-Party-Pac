@@ -290,6 +290,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2129265887 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 299922914736343492, guid: 3af7c1736d144554da26d965a93c8857,
+    type: 3}
+  m_PrefabInstance: {fileID: 299922913756275728}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28c3a58d6faec9f42b10ff8897564c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &299922913756275728
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -297,6 +309,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1510116484}
     m_Modifications:
+    - target: {fileID: 299922913896044296, guid: 3af7c1736d144554da26d965a93c8857,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2129265887}
+    - target: {fileID: 299922913896044296, guid: 3af7c1736d144554da26d965a93c8857,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MinigameOver
+      objectReference: {fileID: 0}
     - target: {fileID: 299922914736343488, guid: 3af7c1736d144554da26d965a93c8857,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FinishHandler : MonoBehaviour
@@ -41,6 +42,21 @@ public class FinishHandler : MonoBehaviour
             winText.gameObject.SetActive(true);
 
             finished = true;
+
+            if (collision.name.Equals("Player 1"))
+            {
+                PlayerPrefs.SetInt("WinnerHorse", 0);
+            } else
+            {
+                PlayerPrefs.SetInt("WinnerHorse", 1);
+            }
+            Invoke("MinigameOver", 5);
         }
+    }
+
+    // Return to main game scene
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

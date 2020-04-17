@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -73,16 +74,18 @@ public class GameManager : MonoBehaviour
                 if (!oBird.GetComponent<Rigidbody2D>().simulated) // if oBird's physics aren't active
                 {
                     winnerText.text = "X wins!"; // Only x bird's physics are active, so x didnt hit something but o did. x wins
-                    PlayerPrefs.SetString("WinnerFlappyXO", "x"); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
+                    PlayerPrefs.SetString("WinnerFlappy", "x"); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
                     SetPageState(PageState.FinalGameOver); // Change ui page to final game over screen, because no replay needed
+                    Invoke("MinigameOver", 5);
                 }
                 break;
             case (true): // xBird's physics not active
                 if (oBird.GetComponent<Rigidbody2D>().simulated) // if oBird's physics are active
                 {
                     winnerText.text = "O wins!";                
-                    PlayerPrefs.SetString("WinnerFlappyXO", "o");
+                    PlayerPrefs.SetString("WinnerFlappy", "o");
                     SetPageState(PageState.FinalGameOver);
+                    Invoke("MinigameOver", 5);
                 }
                 if (!oBird.GetComponent<Rigidbody2D>().simulated) // oBird's physics not active, both birds died at the same time
                 {
@@ -135,4 +138,9 @@ public class GameManager : MonoBehaviour
         startPage = GO;
     }
 
+    // Return to main game scene
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
+    }
 }

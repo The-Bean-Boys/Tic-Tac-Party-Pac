@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RopeFinish : MonoBehaviour
@@ -41,14 +42,23 @@ public class RopeFinish : MonoBehaviour
             string winner;
             if (gameObject.name == "leftFinishLine"){
                 winner = "Player 1";
+                PlayerPrefs.SetInt("WinnerTug", 0);
             }
             else{
                 winner = "Player 2";
+                PlayerPrefs.SetInt("WinnerTug", 1);
             }
             winText.GetComponent<TMPro.TextMeshProUGUI>().text = "Winner: " + winner;
             winText.gameObject.SetActive(true);
 
             finished = true;
+            Invoke("MinigameOver", 5);
         }
+    }
+
+    // Return to main game scene
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

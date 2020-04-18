@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SideScrollerManager : MonoBehaviour
 {
@@ -65,6 +66,7 @@ public class SideScrollerManager : MonoBehaviour
                     winText.text = "X wins!"; // Only x bird's physics are active, so x didnt hit something but o did. x wins
                     PlayerPrefs.SetString("WinnerSideScroller", "x"); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
                     SetPageState(PageState.FinalGameOver); // Change ui page to final game over screen, because no replay needed
+                    Invoke("MinigameOver", 5);
                 }
                 break;
             case (true): // xBird's physics not active
@@ -73,6 +75,7 @@ public class SideScrollerManager : MonoBehaviour
                     winText.text = "O wins!";
                     PlayerPrefs.SetString("WinnerSideScroller", "o");
                     SetPageState(PageState.FinalGameOver);
+                    Invoke("MinigameOver", 5);
                 }
                 if (!O.GetComponent<Rigidbody2D>().simulated) // oBird's physics not active, both birds died at the same time
                 {
@@ -117,6 +120,11 @@ public class SideScrollerManager : MonoBehaviour
         OnGameStarted();
         gameOver = false;
         SetPageState(PageState.None);
+    }
+
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 
 }

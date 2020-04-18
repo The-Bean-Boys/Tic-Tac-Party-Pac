@@ -19,7 +19,7 @@ public class SideScrollerPlayer : MonoBehaviour
     SideScrollerManager Manager;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         Manager = SideScrollerManager.Instance;
@@ -56,9 +56,10 @@ public class SideScrollerPlayer : MonoBehaviour
     {
         if (Manager.startPage.activeSelf || Manager.gameOverPage.activeSelf) { return; }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.X) && gameObject.name.Equals("X"))
             Jump();
-
+        if (Input.GetKey(KeyCode.O) && gameObject.name.Equals("O"))
+            Jump();
         //Hit in face
         if (transform.position.x < posX-.1)
         {

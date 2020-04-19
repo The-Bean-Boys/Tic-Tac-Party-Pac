@@ -32,15 +32,14 @@ public class MMButtonHandler : MonoBehaviour
 
     void GenerateProblem()
     {
-        result = Random.Range(1, 20);
-        operation = Random.Range(1, 3);
+        
+        operation = Random.Range(1, 5);
 
         sum = 0;
         count = 0;
 
         
-        // setting the result box
-        resultTextBox.GetComponent<Text>().text = result.ToString();
+        
 
         // setting the operation box
         if (operation == 1)
@@ -55,6 +54,7 @@ public class MMButtonHandler : MonoBehaviour
         // setting up the buttons. need to randomize order.
         if (operation == 1)
         {
+            result = Random.Range(1, 20);
             opA = Random.Range(1, result);
             opB = result - opA;
             opC = Random.Range(1, 20);
@@ -64,6 +64,7 @@ public class MMButtonHandler : MonoBehaviour
         }
         else if (operation == 2)
         {
+            result = Random.Range(1, 20);
             opA = Random.Range(result+1, 30);
             opB = opA - result;
             opC = Random.Range(1, 30);
@@ -71,6 +72,30 @@ public class MMButtonHandler : MonoBehaviour
             opE = Random.Range(1, 30);
             opF = Random.Range(1, 30);
         }
+        else if (operation == 3)
+        {
+            opA = Random.Range(1, 13);
+            opB = Random.Range(1, 13);
+            result = opA * opB;
+            opC = Random.Range(1, 13);
+            opD = Random.Range(1, 13);
+            opE = Random.Range(1, 13);
+            opF = Random.Range(1, 13);
+        }
+        else if (operation == 4)
+        {
+            result = Random.Range(1, 13);
+            opA = Random.Range(1, 13);
+            opB = result * opA;
+            
+            opC = Random.Range(1, 13);
+            opD = Random.Range(1, 13) * Random.Range(1, 13);
+            opE = Random.Range(1, 13);
+            opF = Random.Range(1, 13) * Random.Range(1, 13);
+        }
+
+        // setting the result box
+        resultTextBox.GetComponent<Text>().text = result.ToString();
 
         optionA.GetComponentInChildren<Text>().text = opA.ToString();
         optionB.GetComponentInChildren<Text>().text = opB.ToString();
@@ -104,7 +129,7 @@ public class MMButtonHandler : MonoBehaviour
                 sum *= value;
                 break;
             case 4:
-                //division
+                //division - fix this to not allow for erroneous correct answers (integer division)
                 if (count == 0)
                     sum = value;
                 else
@@ -120,6 +145,7 @@ public class MMButtonHandler : MonoBehaviour
             if (sum == result)
             {
                 score[whoseTurn]++;
+                Debug.Log("CORRECT!");
             }
 
             GenerateProblem(); //this method resets sum and count.
@@ -128,37 +154,37 @@ public class MMButtonHandler : MonoBehaviour
 
     public void ButtonAPressed()
     {
-        int value = int.Parse(optionA.ToString());
+        int value = int.Parse(optionA.GetComponentInChildren<Text>().text);
         ButtonPressed(value);
     }
 
     public void ButtonBPressed()
     {
-        int value = int.Parse(optionB.ToString());
+        int value = int.Parse(optionB.GetComponentInChildren<Text>().text);
         ButtonPressed(value);
     }
 
     public void ButtonCPressed()
     {
-        int value = int.Parse(optionC.ToString());
+        int value = int.Parse(optionC.GetComponentInChildren<Text>().text);
         ButtonPressed(value);
     }
 
     public void ButtonDPressed()
     {
-        int value = int.Parse(optionD.ToString());
+        int value = int.Parse(optionD.GetComponentInChildren<Text>().text);
         ButtonPressed(value);
     }
 
     public void ButtonEPressed()
     {
-        int value = int.Parse(optionE.ToString());
+        int value = int.Parse(optionE.GetComponentInChildren<Text>().text);
         ButtonPressed(value);
     }
 
     public void ButtonFPressed()
     {
-        int value = int.Parse(optionF.ToString());
+        int value = int.Parse(optionF.GetComponentInChildren<Text>().text);
         ButtonPressed(value);
     }
 

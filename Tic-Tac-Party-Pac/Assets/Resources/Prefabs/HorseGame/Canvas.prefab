@@ -635,7 +635,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1786088853
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 68b4a6deacf1df34d840a8a9b2b716b3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -660,6 +660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e107506cbde2404a87a1b2fdbf07f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  acceleration: 3
 --- !u!50 &4302472789319479176
 Rigidbody2D:
   serializedVersion: 4
@@ -785,7 +786,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1786088853
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 68b4a6deacf1df34d840a8a9b2b716b3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -810,6 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e107506cbde2404a87a1b2fdbf07f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  acceleration: 3
 --- !u!50 &4302472789488228730
 Rigidbody2D:
   serializedVersion: 4
@@ -1032,7 +1034,7 @@ SortingGroup:
   m_GameObject: {fileID: 4302472789596177228}
   m_Enabled: 1
   m_SortingLayerID: -1786088853
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
 --- !u!1 &4302472789833413129
 GameObject:
@@ -1343,5 +1345,5 @@ SortingGroup:
   m_GameObject: {fileID: 4302472789977063772}
   m_Enabled: 1
   m_SortingLayerID: -1786088853
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0

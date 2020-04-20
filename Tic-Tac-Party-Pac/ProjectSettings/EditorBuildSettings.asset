@@ -26,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tug-of-War Minigame.unity
     guid: a5d991b37a26f6a40b32d8e5f229f9ff
+  - enabled: 1
+    path: Assets/Scenes/SideScroller.unity
+    guid: 72c20fffd1b451e4cb50e77b958b9821
+  - enabled: 1
+    path: Assets/Scenes/MentalMath.unity
+    guid: 0c45f6aa57e22b441bbef611e93f6e4c
   m_configObjects: {}

@@ -6,7 +6,8 @@ public class HorseHandler : MonoBehaviour
 {
 
     new Rigidbody2D rigidbody2D;
-    float speed;
+    public float acceleration = 1.0f;
+    float speed = 10.0f;
 
     /* Start is called before the first frame update
      */
@@ -28,7 +29,7 @@ public class HorseHandler : MonoBehaviour
      */
     private void Update()
     {
-        rigidbody2D.velocity = transform.right * speed;
+        rigidbody2D.velocity = transform.right * speed * acceleration;
     }
 
 }

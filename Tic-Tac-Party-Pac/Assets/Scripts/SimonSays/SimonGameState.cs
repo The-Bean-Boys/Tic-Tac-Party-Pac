@@ -49,12 +49,12 @@ public class SimonGameState : MonoBehaviour
         {
             if (PlayerTurn.Equals("Player One"))
             {
-                SF.SimonWins("X");
+                SF.SimonWins("O");
                 PlayerPrefs.SetInt("WinnerSimon", 0);
             }
             else
             {
-                SF.SimonWins("O");
+                SF.SimonWins("X");
                 PlayerPrefs.SetInt("WinnerSimon", 1);
             }
         }

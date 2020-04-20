@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MMButtonHandler : MonoBehaviour
 {
@@ -315,21 +316,28 @@ public class MMButtonHandler : MonoBehaviour
 
     void evaluateGame()
     {
+        finalMessage.SetActive(true);
         if (score[0] > score[1])
         {
             finalMessage.GetComponentInChildren<Text>().text = "X Wins!";
+            PlayerPrefs.SetString("WinnerMentalMath", "x");
+            Invoke("MinigameOver", 5);
         }
         else if (score[0] < score[1])
         {
             finalMessage.GetComponentInChildren<Text>().text = "O Wins!";
+            PlayerPrefs.SetString("WinnerMentalMath", "o");
+            Invoke("MinigameOver", 5);
         }
         else
         {
             needsRematch = true;
             finalMessage.GetComponentInChildren<Text>().text = "Tied Game!\nClick to\nPlay Again";
         }
-
-        finalMessage.SetActive(true);
     }
 
+    private void MinigameOver()
+    {
+        SceneManager.LoadScene("GameScene");
+    }
 }

@@ -14,6 +14,7 @@ public class GamePlay : MonoBehaviour
     public int[] playedCells; //An array of 81 ints, -100 indicates unplayed, 1 is x played, 2 is o played. To keep track of which cells have been played to who
     public int[] playedTiles; //An array of 9, -100 indicates unplayed, 1 is x played, 2 is o played. To keep track of which tiles have been won by who
     public GameObject[] winningLine; //An array of 72 lines to indicate which rows have been won in each won tile
+    public int[] winningLines; // Array of 72 ints indicating which lines in winningLine[] are active (for playerprefs purposes)
     public GameObject[] bigWinLine;
     public GameObject[] winningShades;
     public Text xCountText; //The text object of the x counter
@@ -40,11 +41,11 @@ public class GamePlay : MonoBehaviour
         }
     }
 
+    // Set up new game
     public void GameSetup()
     {
         gameOverPage.SetActive(false);
         gameBoard.SetActive(true);
-        //PlayerPrefs.DeleteAll();
 
         turn = 0; //Sets the turn count to 0
         turns = 0; //Sets turns count to 0
@@ -62,15 +63,19 @@ public class GamePlay : MonoBehaviour
         }
         for (int i = 0; i < playedCells.Length; i++)
         {
-            playedCells[i] = -100; //Sets all the playedCells to not played (-100)
+            playedCells[i] = 0; //Sets all the playedCells to not played
         }
         for (int i = 0; i < playedTiles.Length; i++)
         {
-            playedTiles[i] = -100; //Sets all the playedTiles to not won (-100)
+            playedTiles[i] = 0; //Sets all the playedTiles to not won
         }
         for (int i = 0; i < winningLine.Length; i++)
         {
             winningLine[i].SetActive(false);
+        }
+        for (int i = 0; i < winningLines.Length; i++)
+        {
+            winningLines[i] = 0;
         }
         for (int i = 0; i < winningShades.Length; i++)
         {
@@ -82,6 +87,7 @@ public class GamePlay : MonoBehaviour
         }
     }
 
+    // Reload existing game
     public void GameRedo()
     {
         turn = PlayerPrefs.GetInt("Turn");
@@ -107,25 +113,50 @@ public class GamePlay : MonoBehaviour
                 spaces[i].interactable = true;
             }
         }
-        //ReturnToTile(PlayerPrefs.GetInt(""));
+        for (int i = 0; i < 72; i++)
+        {
+            winningLines[i] = PlayerPrefs.GetInt("WinningLines");
+            winningLine[i].SetActive(winningLines[i] == 1);
+        }
+        ReturnToTile(PlayerPrefs.GetString("LastMinigame"), PlayerPrefs.GetInt("FocusCell"));
         NextTurn();
     }
 
-    public void TicTacToe(int WhatButton) //Called when clicked by a button, WhatButton is int of button clicked
+    // Checks if the minigame was won by the player attempting to win a tile, places
+    // the player's icon on the cell if true
+    private void ReturnToTile(string minigame, int cell)
     {
-        int WhatTile = WhatButton / 9; //Calculates the tile holding the cell
+        if (PlayerPrefs.GetInt(GetMinigamePref(minigame)) != turn)
+        {
+            playedCells[cell] = 0; // Sets playedCells of that cell to 0 (unplayed)
+            spaces[cell].image.sprite = playIcons[3]; // Sets the cell image to gray (unplayed)
+            spaces[cell].interactable = true; //Turns off the interaction of the button
+        } else
+        {
 
-        spaces[WhatButton].GetComponent<Image>().sprite = null; //Sets the button image to null
-        spaces[WhatButton].image.sprite = playIcons[turn]; //Sets the image of button to the player whos turn it is
-        spaces[WhatButton].interactable = false; //Turns off the interaction of the button
+        }
 
-        playedCells[WhatButton] = turn + 1; //Sets playedCells of that button to 1 + the turn (1 for x, 2 for o)
+        SetSolutions(cell / 9);
+    }
 
-        if (TileWon(WhatTile, turn))
+    // Called when clicked by a button, WhatButton is int of button clicked
+    public void TicTacToe(int cell) 
+    {
+        int tile = cell / 9; // Calculates the tile holding the cell
+        PlayerPrefs.SetInt("FocusCell", cell); // Last clicked cell
+        playedCells[cell] = turn + 1; //Sets playedCells of that button to 1 + the turn (1 for x, 2 for o)
+        spaces[cell].GetComponent<Image>().sprite = null; //Sets the button image to null
+        spaces[cell].image.sprite = playIcons[turn]; //Sets the image of button to the player whos turn it is
+        spaces[cell].interactable = false; //Turns off the interaction of the button
+        if (TileWon(tile, turn))
         {
             for (int i = 0; i < playedCells.Length; i++)
             {
                 PlayerPrefs.SetInt("PlayedCells" + i, playedCells[i]);
+            }
+            for (int i = 0; i < winningLine.Length; i++)
+            {
+                PlayerPrefs.SetInt("WinningLine" + i, winningLines[i]);
             }
             PlayerPrefs.SetInt("Turn", turn);
             PlayerPrefs.SetInt("Turns", turns);
@@ -137,7 +168,6 @@ public class GamePlay : MonoBehaviour
              */
             string minigameChoice = RandomMinigame();
             PlayerPrefs.SetString("LastMinigame", minigameChoice);
-            PlayerPrefs.SetInt("FocusTile", WhatButton);
             SceneManager.LoadScene(minigameChoice);
         }
         NextTurn();
@@ -147,7 +177,6 @@ public class GamePlay : MonoBehaviour
     void NextTurn()
     {
         turns++; //Increases turn count
-        GameWinCheck();
         if (turn == 0) //If x is turn
         {
             xCount++; //Increases x count of cells
@@ -175,55 +204,105 @@ public class GamePlay : MonoBehaviour
     // Returns true if the given player has won the given tile
     bool TileWon(int tile, int player)
     {
-        bool cat = true;
-        int offset = tile * 9; //Calculates the offset of tile (18 is start of 3rd tile, etc.)
-        int s1 = playedCells[0 + offset] + playedCells[1 + offset] + playedCells[2 + offset]; //Calculates values of top row
-        int s2 = playedCells[3 + offset] + playedCells[4 + offset] + playedCells[5 + offset]; //Calculates values of middle row
-        int s3 = playedCells[6 + offset] + playedCells[7 + offset] + playedCells[8 + offset]; //Calculates values of bottom row
-        int s4 = playedCells[0 + offset] + playedCells[3 + offset] + playedCells[6 + offset]; //Calculates values of left column
-        int s5 = playedCells[1 + offset] + playedCells[4 + offset] + playedCells[7 + offset]; //Calculates values of middle column
-        int s6 = playedCells[2 + offset] + playedCells[5 + offset] + playedCells[8 + offset]; //Calculates values of right column
-        int s7 = playedCells[0 + offset] + playedCells[4 + offset] + playedCells[8 + offset]; //Calculates values of left top to bottom right diagonal
-        int s8 = playedCells[2 + offset] + playedCells[4 + offset] + playedCells[6 + offset]; //Calculates values of top right to bottom left diagonal
-        var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
+        int[] solutions = GetSolutions(tile);
         for (int i = 0; i < solutions.Length; i++)
         {
-            if (solutions[i] < 0)
-                cat = false;
-
+            Debug.Log(solutions[i]);
             // If x won (1 + 1 + 1, three xs in a row) and x is the player
-            if (solutions[i] == 3 && player == 0)
-                return true;
+            if (solutions[i] == 1)
+                return player == 0;
 
             // If o won (2 + 2 + 2, three os in a row) and o is the player
-            else if (solutions[i] == 6 && player == 1)
-                return true;
+            else if (solutions[i] == 2)
+                return player == 1;
+            
         }
 
         // if neither player has won the tile, return true if given player has won more tiles than the other
-        if (cat)
+        if (TileFull(tile))
         {
             return CatWon(tile, player);
         }
         return false;
     }
 
+
+    // Returns true if the tile is full, false otherwise
+    bool TileFull(int tile)
+    {
+        int count = 0;
+        for (int i = tile * 9; i < tile * 9 + 9; i++)
+        {
+            if (playedCells[i] > 0)
+                count++;
+        }
+        return count == 9;
+    }
+
+    // Returns an array of winning lines on GIVEN TILE
+    int[] GetSolutions (int tile)
+    {
+        int offset = tile * 9; // Calculates the offset of tile (18 is start of 3rd tile, etc.)
+        int s1 = ThreeInARow(playedCells[0 + offset], playedCells[1 + offset], playedCells[2 + offset]); // top row
+        int s2 = ThreeInARow(playedCells[3 + offset], playedCells[4 + offset], playedCells[5 + offset]);  // middle row
+        int s3 = ThreeInARow(playedCells[6 + offset], playedCells[7 + offset], playedCells[8 + offset]); // bottom row
+        int s4 = ThreeInARow(playedCells[0 + offset], playedCells[3 + offset], playedCells[6 + offset]); // left column
+        int s5 = ThreeInARow(playedCells[1 + offset], playedCells[4 + offset], playedCells[7 + offset]); // middle column
+        int s6 = ThreeInARow(playedCells[2 + offset], playedCells[5 + offset], playedCells[8 + offset]); // right column
+        int s7 = ThreeInARow(playedCells[0 + offset], playedCells[4 + offset], playedCells[8 + offset]); // left top to bottom right diagonal
+        int s8 = ThreeInARow(playedCells[2 + offset], playedCells[4 + offset], playedCells[6 + offset]); // top right to bottom left diagonal
+        return new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
+    }
+
+    // Returns an array of winning lines on GAME BOARD
+    int[] GetSolutions()
+    {
+        int s1 = ThreeInARow(playedTiles[0], playedTiles[1], playedTiles[2]); // top row
+        int s2 = ThreeInARow(playedTiles[3], playedTiles[4], playedTiles[5]); // middle row
+        int s3 = ThreeInARow(playedTiles[6], playedTiles[7], playedTiles[8]); // bottom row
+        int s4 = ThreeInARow(playedTiles[0], playedTiles[3], playedTiles[6]); // left column
+        int s5 = ThreeInARow(playedTiles[1], playedTiles[4], playedTiles[7]); // middle column
+        int s6 = ThreeInARow(playedTiles[2], playedTiles[5], playedTiles[8]); // right column
+        int s7 = ThreeInARow(playedTiles[0], playedTiles[4], playedTiles[8]); // left top to bottom right diagonal
+        int s8 = ThreeInARow(playedTiles[2], playedTiles[4], playedTiles[6]); // top right to bottom left diagonal
+        return new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
+    }
+
+    // Saves the current solutions of the tile to winningLines[] to avoid redrawing lines 
+    void SetSolutions (int tile)
+    {
+        int[] solutions = GetSolutions(tile);
+        for (int i = 0; i < solutions.Length; i++)
+        {
+            if (solutions[i] == 1) //If x won (1 + 1 + 1, three xs in a row)
+            {
+                winningLines[i + (tile * 8)] = 1;
+                winningLine[i + (tile * 8)].SetActive(true);
+            }
+            else if (solutions[i] == 2) //If o won (2 + 2 + 2, three os in a row)
+            {
+                winningLines[i + (tile * 8)] = 1;
+                winningLine[i + (tile * 8)].SetActive(true);
+            }
+        }
+    }
+
+    // Returns 1 if the three ints match as an x value, 2 if they match as an o, 0 otherwise
+    int ThreeInARow(int one, int two, int three) 
+    {
+        if ((one == two) && (one == three))
+            return one;
+        return 0;
+    }
+
     void WinnerCheck(int WhatTile)
     {
         bool cat = true;
-        int offset = WhatTile * 9; //Calculates the offset of tile (18 is start of 3rd tile, etc.)
-        int s1 = playedCells[0 + offset] + playedCells[1 + offset] + playedCells[2 + offset]; //Calculates values of top row
-        int s2 = playedCells[3 + offset] + playedCells[4 + offset] + playedCells[5 + offset]; //Calculates values of middle row
-        int s3 = playedCells[6 + offset] + playedCells[7 + offset] + playedCells[8 + offset]; //Calculates values of bottom row
-        int s4 = playedCells[0 + offset] + playedCells[3 + offset] + playedCells[6 + offset]; //Calculates values of left column
-        int s5 = playedCells[1 + offset] + playedCells[4 + offset] + playedCells[7 + offset]; //Calculates values of middle column
-        int s6 = playedCells[2 + offset] + playedCells[5 + offset] + playedCells[8 + offset]; //Calculates values of right column
-        int s7 = playedCells[0 + offset] + playedCells[4 + offset] + playedCells[8 + offset]; //Calculates values of left top to bottom right diagonal
-        int s8 = playedCells[2 + offset] + playedCells[4 + offset] + playedCells[6 + offset]; //Calculates values of top right to bottom left diagonal
-        var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
+        int[] solutions = GetSolutions(WhatTile);
+
         for (int i = 0; i < solutions.Length; i++)
         {
-            if (solutions[i] < 0)
+            if (solutions[i] > 0)
             {
                 cat = false;
             }
@@ -248,6 +327,7 @@ public class GamePlay : MonoBehaviour
         int offset = WhatTile * 9; //Offset of the tile
         int lineOffset = WhatTile * 8; //There are only 8 lines for each tile, so the lineOffset multiplier goes down by 1
         winningLine[indexIn + lineOffset].SetActive(true); //Sets the winning line of the tile + the solution tile to active to show
+        winningLines[indexIn + lineOffset] = 1;
         if (turn == 0)
         {
             winningShades[WhatTile * 2].SetActive(true);
@@ -325,49 +405,6 @@ public class GamePlay : MonoBehaviour
         }
     }
 
-    void GameWinCheck()
-    {
-        bool cat = true;
-        int s1 = playedTiles[0] + playedTiles[1] + playedTiles[2];
-        int s2 = playedTiles[3] + playedTiles[4] + playedTiles[5];
-        int s3 = playedTiles[6] + playedTiles[7] + playedTiles[8];
-        int s4 = playedTiles[0] + playedTiles[3] + playedTiles[6];
-        int s5 = playedTiles[1] + playedTiles[4] + playedTiles[7];
-        int s6 = playedTiles[2] + playedTiles[5] + playedTiles[8];
-        int s7 = playedTiles[0] + playedTiles[4] + playedTiles[8];
-        int s8 = playedTiles[2] + playedTiles[4] + playedTiles[6];
-        var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 };
-
-        for (int i = 0; i < 8; i++)
-        {
-            if (solutions[i] == 3)
-            {
-                GameOver(0);
-                bigWinLine[i].SetActive(true);
-            }
-            else if (solutions[i] == 6)
-            {
-                GameOver(1);
-                bigWinLine[i].SetActive(true);
-            }
-            else if (solutions[i] < 0)
-            {
-                cat = false;
-            }
-        }
-
-        if (cat)
-        {
-            if (xCount > oCount)
-            {
-                GameOver(0);
-            }
-            else
-            {
-                GameOver(1);
-            }
-        }
-    }
 
     // Returns the string of a random minigame
     string RandomMinigame()
@@ -376,6 +413,30 @@ public class GamePlay : MonoBehaviour
         return minigames[Random.Range(0, minigames.Length)];
     }
 
+    // Returns the PlayerPrefs key for the given minigame scene name
+    string GetMinigamePref(string minigame)
+    {
+        switch (minigame) {
+            case "Balloon Minigame":
+                return "WinnerBalloon";
+            case "FlappyXO":
+                return "WinnerFlappy";
+            case "Horse Minigame":
+                return "WinnerHorse";
+            case "MentalMath":
+                return "WinnerMentalMath";
+            case "SideScroller":
+                return "WinnerSideScroller";
+            case "SimonSays":
+                return "WinnerSimon";
+            case "Trivia Minigame":
+                return "WinnerTrivia";
+            case "Tug-of-War Minigame":
+                return "WinnerTug";
+            default :
+                return "Error";
+        };
+    }
 
     /* Call when game is over
      * @param winner - pass the value of who won

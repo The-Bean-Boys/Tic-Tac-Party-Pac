@@ -169,13 +169,11 @@ public class Game_Script : MonoBehaviour
                 // Display the winner
                 if (winner == 1){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 1 Wins!";
-                    PlayerPrefs.SetInt("WinnerTrivia", 0);
-                    Invoke("MinigameOver", 5);
+                    WinnerDecided(0);
                 }
                 else if (winner == 2){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
-                    PlayerPrefs.SetInt("WinnerTrivia", 1);
-                    Invoke("MinigameOver", 5);
+                    WinnerDecided(1);
                 }
                 else
                 {
@@ -248,11 +246,14 @@ public class Game_Script : MonoBehaviour
                     // Display the winner
                     if (winner == 1){
                         winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 1 Wins!";
+                        WinnerDecided(0);
                     }
                     else if (winner == 2){
                         winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
+                        WinnerDecided(1);
                     }
-                    else{
+                    else
+                    {
                         winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Tie Game!";
                         playAgainButton.SetActive(true);
                     }
@@ -283,6 +284,13 @@ public class Game_Script : MonoBehaviour
         playerTwoScore = 0;
         playerActive = 0;
         Start();
+    }
+
+    // Declare winner
+    private void WinnerDecided(int winner)
+    {
+        PlayerPrefs.SetInt("WinnerTrivia", winner);
+        Invoke("MinigameOver", 5);
     }
 
     // Return to main game scene

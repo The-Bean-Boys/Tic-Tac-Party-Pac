@@ -131,7 +131,8 @@ public class GamePlay : MonoBehaviour
             playedCells[cell] = 0; // Sets playedCells of that cell to 0 (unplayed)
             spaces[cell].image.sprite = playIcons[3]; // Sets the cell image to gray (unplayed)
             spaces[cell].interactable = true; //Turns off the interaction of the button
-        } else
+        }
+        else
         {
 
         }
@@ -140,7 +141,7 @@ public class GamePlay : MonoBehaviour
     }
 
     // Called when clicked by a button, WhatButton is int of button clicked
-    public void TicTacToe(int cell) 
+    public void TicTacToe(int cell)
     {
         int tile = cell / 9; // Calculates the tile holding the cell
         PlayerPrefs.SetInt("FocusCell", cell); // Last clicked cell
@@ -179,14 +180,12 @@ public class GamePlay : MonoBehaviour
         turns++; //Increases turn count
         if (turn == 0) //If x is turn
         {
-            xCount++; //Increases x count of cells
             turn++; //Increases turn to 1 (o)
             turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets x image to dull
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets o image to bright
         }
         else
         {
-            oCount++; //Increases o count of cells
             turn--; //Decrements turn to 0 (x)
             turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets x image to bright
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
@@ -197,6 +196,15 @@ public class GamePlay : MonoBehaviour
     // Update score displays
     void UpdateCount()
     {
+        xCount = 0;
+        oCount = 0;
+        for (int i = 0; i < playedCells.Length; i++)
+        {
+            if (playedCells[i] == 1)
+                xCount++;
+            if (playedCells[i] == 2)
+                oCount++;
+        }
         xCountText.text = xCount.ToString();
         oCountText.text = oCount.ToString();
     }
@@ -207,7 +215,6 @@ public class GamePlay : MonoBehaviour
         int[] solutions = GetSolutions(tile);
         for (int i = 0; i < solutions.Length; i++)
         {
-            Debug.Log(solutions[i]);
             // If x won (1 + 1 + 1, three xs in a row) and x is the player
             if (solutions[i] == 1)
                 return player == 0;
@@ -215,7 +222,7 @@ public class GamePlay : MonoBehaviour
             // If o won (2 + 2 + 2, three os in a row) and o is the player
             else if (solutions[i] == 2)
                 return player == 1;
-            
+
         }
 
         // if neither player has won the tile, return true if given player has won more tiles than the other
@@ -240,7 +247,7 @@ public class GamePlay : MonoBehaviour
     }
 
     // Returns an array of winning lines on GIVEN TILE
-    int[] GetSolutions (int tile)
+    int[] GetSolutions(int tile)
     {
         int offset = tile * 9; // Calculates the offset of tile (18 is start of 3rd tile, etc.)
         int s1 = ThreeInARow(playedCells[0 + offset], playedCells[1 + offset], playedCells[2 + offset]); // top row
@@ -269,7 +276,7 @@ public class GamePlay : MonoBehaviour
     }
 
     // Saves the current solutions of the tile to winningLines[] to avoid redrawing lines 
-    void SetSolutions (int tile)
+    void SetSolutions(int tile)
     {
         int[] solutions = GetSolutions(tile);
         for (int i = 0; i < solutions.Length; i++)
@@ -288,40 +295,16 @@ public class GamePlay : MonoBehaviour
     }
 
     // Returns 1 if the three ints match as an x value, 2 if they match as an o, 0 otherwise
-    int ThreeInARow(int one, int two, int three) 
+    int ThreeInARow(int one, int two, int three)
     {
         if ((one == two) && (one == three))
             return one;
         return 0;
     }
 
-    void WinnerCheck(int WhatTile)
-    {
-        bool cat = true;
-        int[] solutions = GetSolutions(WhatTile);
-
-        for (int i = 0; i < solutions.Length; i++)
-        {
-            if (solutions[i] > 0)
-            {
-                cat = false;
-            }
-            if (solutions[i] == 3) //If x won (1 + 1 + 1, three xs in a row)
-            {
-                WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
-
-            }
-            else if (solutions[i] == 6) //If o won (2 + 2 + 2, three os in a row)
-            {
-                WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
-            }
-        }
-        if (cat)
-        {
-            CatGame(WhatTile);
-        }
-    }
-
+    /* DEPRECATED FUNCTION
+     *  some of the code still necessary and will be repurposed.
+     */
     void WinnerDisplay(int indexIn, int WhatTile)
     {
         int offset = WhatTile * 9; //Offset of the tile
@@ -377,35 +360,6 @@ public class GamePlay : MonoBehaviour
             return player == 1;
     }
 
-    void CatGame(int WhatTile)
-    {
-        int offset = WhatTile * 9;
-        int xCellCount = 0;
-        int oCellCount = 0;
-        for (int i = offset; i < offset + 9; i++)
-        {
-            if (playedCells[i] == 1)
-            {
-                xCellCount++;
-            }
-            else
-            {
-                oCellCount++;
-            }
-        }
-        if (xCellCount > oCellCount)
-        {
-            playedTiles[WhatTile] = 1;
-            winningShades[WhatTile * 2].SetActive(true);
-        }
-        else
-        {
-            playedTiles[WhatTile] = 2;
-            winningShades[WhatTile * 2 + 1].SetActive(true);
-        }
-    }
-
-
     // Returns the string of a random minigame
     string RandomMinigame()
     {
@@ -416,7 +370,8 @@ public class GamePlay : MonoBehaviour
     // Returns the PlayerPrefs key for the given minigame scene name
     string GetMinigamePref(string minigame)
     {
-        switch (minigame) {
+        switch (minigame)
+        {
             case "Balloon Minigame":
                 return "WinnerBalloon";
             case "FlappyXO":
@@ -433,7 +388,7 @@ public class GamePlay : MonoBehaviour
                 return "WinnerTrivia";
             case "Tug-of-War Minigame":
                 return "WinnerTug";
-            default :
+            default:
                 return "Error";
         };
     }

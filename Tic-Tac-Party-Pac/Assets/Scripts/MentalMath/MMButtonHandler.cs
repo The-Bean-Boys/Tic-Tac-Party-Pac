@@ -17,17 +17,54 @@ public class MMButtonHandler : MonoBehaviour
     public GameObject optionD;
     public GameObject optionE;
     public GameObject optionF;
+    public GameObject xstart;
+    public GameObject ostart;
+    public GameObject finalMessage;
     int opA, opB, opC, opD, opE, opF;
     int count; //number of buttons pressed
     int sum;
+    float timeLeft;
+    bool timerActive;
+    bool needsRematch;
 
     // Start is called before the first frame update
     void Start()
     {
+        xstart.SetActive(true);
+        ostart.SetActive(false);
+        finalMessage.SetActive(false);
+        timerActive = false;
+        needsRematch = false;
+
+        score = new int[] { 0, 0 }; // x, y
+
+        
+    }
+
+    public void xstarted()
+    {
+        xstart.SetActive(false);
+        timeLeft = 30.0f;
+        timerActive = true;
         whoseTurn = 0;
-        score = new int[] { 0, 0 };
-        //count = 20;
         GenerateProblem();
+    }
+
+    public void ostarted()
+    {
+        ostart.SetActive(false);
+        timeLeft = 30.0f;
+        timerActive = true;
+        whoseTurn = 1;
+        GenerateProblem();
+    }
+
+    public void finalMsgClicked()
+    {
+        if(needsRematch)
+        {
+            Start(); //Restarts game
+        }
     }
 
     void GenerateProblem()
@@ -55,43 +92,56 @@ public class MMButtonHandler : MonoBehaviour
         if (operation == 1)
         {
             result = Random.Range(1, 20);
-            opA = Random.Range(1, result);
-            opB = result - opA;
-            opC = Random.Range(1, 20);
-            opD = Random.Range(1, 20);
-            opE = Random.Range(1, 20);
-            opF = Random.Range(1, 20);
+            int temp = Random.Range(1, result);
+            int[] r = RandomizeButtons(temp, result - temp, Random.Range(1, 20), Random.Range(1, 20), Random.Range(1, 20), Random.Range(1, 20));
+            opA = r[0];
+            opB = r[1];
+            opC = r[2];
+            opD = r[3];
+            opE = r[4];
+            opF = r[5];
         }
         else if (operation == 2)
         {
             result = Random.Range(1, 20);
-            opA = Random.Range(result+1, 30);
-            opB = opA - result;
-            opC = Random.Range(1, 30);
-            opD = Random.Range(1, 30);
-            opE = Random.Range(1, 30);
-            opF = Random.Range(1, 30);
+            int temp = Random.Range(result + 1, 30);
+            int[] r = RandomizeButtons(temp, temp - result, Random.Range(1, 30), Random.Range(1, 30), Random.Range(1, 30), Random.Range(1, 30));
+            opA = r[0];
+            opB = r[1];
+            opC = r[2];
+            opD = r[3];
+            opE = r[4];
+            opF = r[5];
         }
         else if (operation == 3)
         {
             opA = Random.Range(1, 13);
             opB = Random.Range(1, 13);
             result = opA * opB;
-            opC = Random.Range(1, 13);
-            opD = Random.Range(1, 13);
-            opE = Random.Range(1, 13);
-            opF = Random.Range(1, 13);
+
+            int[] r = RandomizeButtons(opA, opB, Random.Range(1, 13), Random.Range(1, 13), Random.Range(1, 13), Random.Range(1, 13));
+
+            opA = r[0];
+            opB = r[1];
+            opC = r[2];
+            opD = r[3];
+            opE = r[4];
+            opF = r[5];
         }
         else if (operation == 4)
         {
             result = Random.Range(1, 13);
             opA = Random.Range(1, 13);
             opB = result * opA;
-            
-            opC = Random.Range(1, 13);
-            opD = Random.Range(1, 13) * Random.Range(1, 13);
-            opE = Random.Range(1, 13);
-            opF = Random.Range(1, 13) * Random.Range(1, 13);
+
+            int[] r = RandomizeButtons(opA, opB, Random.Range(1, 13), Random.Range(1, 13) * Random.Range(1, 13), Random.Range(1, 13), Random.Range(1, 13) * Random.Range(1, 13));
+
+            opA = r[0];
+            opB = r[1];
+            opC = r[2];
+            opD = r[3];
+            opE = r[4];
+            opF = r[5];
         }
 
         // setting the result box
@@ -129,11 +179,20 @@ public class MMButtonHandler : MonoBehaviour
                 sum *= value;
                 break;
             case 4:
-                //division - fix this to not allow for erroneous correct answers (integer division)
+                //division 
+                //To avoid problems with integer division, the way this method works for division is a little different.
+                //Remember that this function is trying to find button1 / button2 = result. Equivalently, result * button2 = button1.
+                //To achieve this:
+                //When the first button is pressed, we store "result" into sum. We then overwrite result with button1.
+                // Button1 (the first button the user presses) is the result of our multiplication problem.
+                // For the second button, we will multiply that by the old result and see if it matches button1 (which is stored in result)
                 if (count == 0)
-                    sum = value;
+                {
+                    sum = result;
+                    result = value;
+                }
                 else
-                    sum /= value;
+                    sum *= value;
                 break;
         }
 
@@ -190,9 +249,87 @@ public class MMButtonHandler : MonoBehaviour
 
 
 
+    int[] RandomizeButtons(int a, int b, int c, int d, int e, int f)
+    {
+        ArrayList entryArray = new ArrayList();
+        entryArray.Add(a);
+        entryArray.Add(b);
+        entryArray.Add(c);
+        entryArray.Add(d);
+        entryArray.Add(e);
+        entryArray.Add(f);
+
+        int a2, b2, c2, d2, e2, f2;
+
+        int rand = Random.Range(0, 6);
+        a2 = (int) entryArray[rand];
+        entryArray.RemoveAt(rand);
+
+        rand = Random.Range(0, 5);
+        b2 = (int)entryArray[rand];
+        entryArray.RemoveAt(rand);
+
+        rand = Random.Range(0, 4);
+        c2 = (int)entryArray[rand];
+        entryArray.RemoveAt(rand);
+
+        rand = Random.Range(0, 3);
+        d2 = (int)entryArray[rand];
+        entryArray.RemoveAt(rand);
+
+        rand = Random.Range(0, 2);
+        e2 = (int)entryArray[rand];
+        entryArray.RemoveAt(rand);
+
+        f2 = (int) entryArray[0];
+
+        return new int[] { a2, b2, c2, d2, e2, f2 };
+
+
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        
+        if (timerActive)
+        {
+            timeLeft -= Time.deltaTime;
+
+            if(timeLeft < 0)
+            {
+                timerActive = false;
+                if (whoseTurn == 0)
+                {
+                    //now it is player 2's turn
+                    ostart.SetActive(true);
+                }
+                else
+                {
+                    evaluateGame();
+                }
+            }
+        }
     }
+
+
+    void evaluateGame()
+    {
+        if (score[0] > score[1])
+        {
+            finalMessage.GetComponentInChildren<Text>().text = "X Wins!";
+        }
+        else if (score[0] < score[1])
+        {
+            finalMessage.GetComponentInChildren<Text>().text = "O Wins!";
+        }
+        else
+        {
+            needsRematch = true;
+            finalMessage.GetComponentInChildren<Text>().text = "Tied Game!\nClick to\nPlay Again";
+        }
+
+        finalMessage.SetActive(true);
+    }
+
 }

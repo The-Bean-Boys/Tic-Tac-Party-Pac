@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         SceneManager.LoadScene("GameScene");
+        PlayerPrefs.DeleteAll();
         PlayerPrefs.SetInt("Playing", 0);
     }
 

@@ -24,6 +24,7 @@ public class GamePlay : MonoBehaviour
     public Text winnerText;
     public GameObject gameBoard; // parent object of the full game board
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +33,8 @@ public class GamePlay : MonoBehaviour
         {
             PlayerPrefs.SetInt("Playing", 1);
             GameSetup(); //On startup, calls GameSetup
-        } else
+        }
+        else
         {
             GameRedo();
         }
@@ -42,7 +44,8 @@ public class GamePlay : MonoBehaviour
     {
         gameOverPage.SetActive(false);
         gameBoard.SetActive(true);
-        
+        //PlayerPrefs.DeleteAll();
+
         turn = 0; //Sets the turn count to 0
         turns = 0; //Sets turns count to 0
         xCount = 0; //Sets x count to 0
@@ -85,28 +88,27 @@ public class GamePlay : MonoBehaviour
         turns = PlayerPrefs.GetInt("Turns");
         xCount = PlayerPrefs.GetInt("XCount");
         oCount = PlayerPrefs.GetInt("OCount");
-        for(int i = 0; i < 81; i++)
+        for (int i = 0; i < 81; i++)
         {
             playedCells[i] = PlayerPrefs.GetInt("PlayedCells" + i);
-            if(playedCells[i] == 1)
+            if (playedCells[i] == 1)
             {
                 spaces[i].image.sprite = playIcons[0];
                 spaces[i].interactable = false;
-            } else if(playedCells[i] == 2)
+            }
+            else if (playedCells[i] == 2)
             {
                 spaces[i].image.sprite = playIcons[1];
                 spaces[i].interactable = false;
-            } else
+            }
+            else
             {
                 spaces[i].image.sprite = playIcons[3];
                 spaces[i].interactable = true;
             }
         }
-        for(int i = 0; i < 9; i++)
-        {
-            WinnerCheck(i);
-        }
-        UpdateCount();
+        //ReturnToTile(PlayerPrefs.GetInt(""));
+        NextTurn();
     }
 
     public void TicTacToe(int WhatButton) //Called when clicked by a button, WhatButton is int of button clicked
@@ -119,9 +121,32 @@ public class GamePlay : MonoBehaviour
 
         playedCells[WhatButton] = turn + 1; //Sets playedCells of that button to 1 + the turn (1 for x, 2 for o)
 
-        turns++; //Increases turn count
+        if (TileWon(WhatTile, turn))
+        {
+            for (int i = 0; i < playedCells.Length; i++)
+            {
+                PlayerPrefs.SetInt("PlayedCells" + i, playedCells[i]);
+            }
+            PlayerPrefs.SetInt("Turn", turn);
+            PlayerPrefs.SetInt("Turns", turns);
+            PlayerPrefs.SetInt("XCount", xCount);
+            PlayerPrefs.SetInt("OCount", oCount);
 
-        WinnerCheck(WhatTile); //Checks if someone has won the tile
+            /* choose random minigame, store the name of it and the deciding tile to grab 
+             * the winner of later, then load that minigame
+             */
+            string minigameChoice = RandomMinigame();
+            PlayerPrefs.SetString("LastMinigame", minigameChoice);
+            PlayerPrefs.SetInt("FocusTile", WhatButton);
+            SceneManager.LoadScene(minigameChoice);
+        }
+        NextTurn();
+    }
+
+    // Move to next turn
+    void NextTurn()
+    {
+        turns++; //Increases turn count
         GameWinCheck();
         if (turn == 0) //If x is turn
         {
@@ -129,7 +154,8 @@ public class GamePlay : MonoBehaviour
             turn++; //Increases turn to 1 (o)
             turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets x image to dull
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets o image to bright
-        } else
+        }
+        else
         {
             oCount++; //Increases o count of cells
             turn--; //Decrements turn to 0 (x)
@@ -137,25 +163,49 @@ public class GamePlay : MonoBehaviour
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
         }
         UpdateCount(); //Updates the text components to the counters
-
-        if (turns == 5)
-        {
-            for(int i = 0; i < playedCells.Length; i++)
-            {
-                PlayerPrefs.SetInt("PlayedCells" + i, playedCells[i]);
-            }
-            PlayerPrefs.SetInt("Turn", turn);
-            PlayerPrefs.SetInt("Turns", turns);
-            PlayerPrefs.SetInt("XCount", xCount);
-            PlayerPrefs.SetInt("OCount",oCount);
-            SceneManager.LoadScene("SimonSays");
-        }
     }
 
+    // Update score displays
     void UpdateCount()
     {
-        xCountText.text = xCount.ToString(); //Sets the text of the GameObject to the string version of the count of x
-        oCountText.text = oCount.ToString(); //Sets the text of the GameObject to the string version of the count of o
+        xCountText.text = xCount.ToString();
+        oCountText.text = oCount.ToString();
+    }
+
+    // Returns true if the given player has won the given tile
+    bool TileWon(int tile, int player)
+    {
+        bool cat = true;
+        int offset = tile * 9; //Calculates the offset of tile (18 is start of 3rd tile, etc.)
+        int s1 = playedCells[0 + offset] + playedCells[1 + offset] + playedCells[2 + offset]; //Calculates values of top row
+        int s2 = playedCells[3 + offset] + playedCells[4 + offset] + playedCells[5 + offset]; //Calculates values of middle row
+        int s3 = playedCells[6 + offset] + playedCells[7 + offset] + playedCells[8 + offset]; //Calculates values of bottom row
+        int s4 = playedCells[0 + offset] + playedCells[3 + offset] + playedCells[6 + offset]; //Calculates values of left column
+        int s5 = playedCells[1 + offset] + playedCells[4 + offset] + playedCells[7 + offset]; //Calculates values of middle column
+        int s6 = playedCells[2 + offset] + playedCells[5 + offset] + playedCells[8 + offset]; //Calculates values of right column
+        int s7 = playedCells[0 + offset] + playedCells[4 + offset] + playedCells[8 + offset]; //Calculates values of left top to bottom right diagonal
+        int s8 = playedCells[2 + offset] + playedCells[4 + offset] + playedCells[6 + offset]; //Calculates values of top right to bottom left diagonal
+        var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 }; //Creates an array of these values
+        for (int i = 0; i < solutions.Length; i++)
+        {
+            if (solutions[i] < 0)
+                cat = false;
+
+            // If x won (1 + 1 + 1, three xs in a row) and x is the player
+            if (solutions[i] == 3 && player == 0)
+                return true;
+
+            // If o won (2 + 2 + 2, three os in a row) and o is the player
+            else if (solutions[i] == 6 && player == 1)
+                return true;
+        }
+
+        // if neither player has won the tile, return true if given player has won more tiles than the other
+        if (cat)
+        {
+            return CatWon(tile, player);
+        }
+        return false;
     }
 
     void WinnerCheck(int WhatTile)
@@ -181,7 +231,8 @@ public class GamePlay : MonoBehaviour
             {
                 WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
 
-            } else if (solutions[i] == 6) //If o won (2 + 2 + 2, three os in a row)
+            }
+            else if (solutions[i] == 6) //If o won (2 + 2 + 2, three os in a row)
             {
                 WinnerDisplay(i, WhatTile); //Displays winner of the tile with the solution and the tile of solution
             }
@@ -201,7 +252,8 @@ public class GamePlay : MonoBehaviour
         {
             winningShades[WhatTile * 2].SetActive(true);
             playedTiles[WhatTile] = 1;
-        } else
+        }
+        else
         {
             winningShades[WhatTile * 2 + 1].SetActive(true);
             playedTiles[WhatTile] = 2;
@@ -215,7 +267,8 @@ public class GamePlay : MonoBehaviour
                 if (turn == 0)
                 {
                     xCount++; //Increase the x Count if x won the tile
-                } else
+                }
+                else
                 {
                     oCount++; //Increase the o count if o won the tile
                 }
@@ -223,6 +276,25 @@ public class GamePlay : MonoBehaviour
             }
             spaces[i].interactable = false; //Makes the button not interactable
         }
+    }
+
+    // Returns true if the given player has more cells in the given tile than the other player
+    bool CatWon(int tile, int player)
+    {
+        int offset = tile * 9;
+        int xCellCount = 0;
+        int oCellCount = 0;
+        for (int i = offset; i < offset + 9; i++)
+        {
+            if (playedCells[i] == 1)
+                xCellCount++;
+            else if (playedCells[i] == 2)
+                oCellCount++;
+        }
+        if (xCellCount > oCellCount)
+            return player == 0;
+        else
+            return player == 1;
     }
 
     void CatGame(int WhatTile)
@@ -235,7 +307,8 @@ public class GamePlay : MonoBehaviour
             if (playedCells[i] == 1)
             {
                 xCellCount++;
-            } else
+            }
+            else
             {
                 oCellCount++;
             }
@@ -244,7 +317,8 @@ public class GamePlay : MonoBehaviour
         {
             playedTiles[WhatTile] = 1;
             winningShades[WhatTile * 2].SetActive(true);
-        } else
+        }
+        else
         {
             playedTiles[WhatTile] = 2;
             winningShades[WhatTile * 2 + 1].SetActive(true);
@@ -270,11 +344,13 @@ public class GamePlay : MonoBehaviour
             {
                 GameOver(0);
                 bigWinLine[i].SetActive(true);
-            } else if (solutions[i] == 6)
+            }
+            else if (solutions[i] == 6)
             {
                 GameOver(1);
                 bigWinLine[i].SetActive(true);
-            } else if (solutions[i] < 0)
+            }
+            else if (solutions[i] < 0)
             {
                 cat = false;
             }
@@ -291,6 +367,13 @@ public class GamePlay : MonoBehaviour
                 GameOver(1);
             }
         }
+    }
+
+    // Returns the string of a random minigame
+    string RandomMinigame()
+    {
+        string[] minigames = { "Balloon Minigame", "FlappyXO", "Horse Minigame", "MentalMath", "SideScroller", "SimonSays", "Trivia Minigame", "Tug-of-War Minigame" };
+        return minigames[Random.Range(0, minigames.Length)];
     }
 
 

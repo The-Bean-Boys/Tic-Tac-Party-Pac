@@ -1980,6 +1980,15 @@ MonoBehaviour:
   - What year was Microsoft founded?
   - How many degrees are in a circle?
   - How many years is a century?
+  - What is the largest planet in our solar system?
+  - How many spaces are on a standard Monopoly board?
+  - What is meteorology the study of?
+  - What is the symbol for potassium?
+  - How many Lord of the Rings films are there?
+  - In what year was the first episode of South Park aired?
+  - How many players are there in a baseball team?
+  - In what month is the Earth closest to the sun?
+  - Who was the first actor to play Doctor Who?
   answerKey:
   - Lansing
   - Lake Superior
@@ -2002,6 +2011,15 @@ MonoBehaviour:
   - 1975
   - 360
   - 100
+  - Jupiter
+  - 40
+  - Weather
+  - K
+  - 3
+  - 1997
+  - 9
+  - January
+  - William Hartnell
 --- !u!1 &1894593047
 GameObject:
   m_ObjectHideFlags: 0

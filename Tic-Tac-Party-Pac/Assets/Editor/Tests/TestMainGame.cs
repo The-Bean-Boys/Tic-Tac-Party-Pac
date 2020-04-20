@@ -8,20 +8,36 @@ namespace Tests
 {
     public class TestMainGame
     {
-        // A Test behaves as an ordinary method
-        [Test]
-        public void TestMainGameSimplePasses()
+        GameObject canvas;
+        GameObject GamePlayGO;
+        GamePlay Game;
+        [SetUp]
+        public void Setup()
         {
-            // Use the Assert class to test conditions
+            canvas = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/GameScene/Canvas"));
+            GamePlayGO = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/GameScene/GamePlay"));
+            Game = GamePlayGO.GetComponent<GamePlay>();
         }
-
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
-        [UnityTest]
-        public IEnumerator TestMainGameWithEnumeratorPasses()
+        [TearDown]
+        public void TearDown()
         {
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
+            Object.Destroy(canvas);
+            Object.Destroy(GamePlayGO);
+            Object.Destroy(Game);
+        }
+        [UnityTest]
+        public IEnumerator PlaceCell()
+        {
+            yield return null;
+        }
+        [UnityTest]
+        public IEnumerator PlaceCellTwo()
+        {
+            yield return null;
+        }
+        [UnityTest]
+        public IEnumerator TTTWins()
+        {
             yield return null;
         }
     }

@@ -31,13 +31,13 @@ namespace Tests
         }
 
         // Tests if the playgame method opens the correct scene
-        [UnityTest]
+        /*[UnityTest]
         public IEnumerator TestPlayGame()
         {
             MM.PlayGame();
             yield return new WaitForSeconds(0.1f);
             Assert.AreEqual("GameScene", SceneManager.GetActiveScene().name);
-        }
+        }*/
 
     }
 }

@@ -36,11 +36,13 @@ public class Game_Script : MonoBehaviour
     "Which of these colors is NOT a primary color?", "When did the Cold War end?", "Which country consumes the most chocolate per capita?", "What is a duel between three people called?",
     "What was the first toy to be advertised on television?", "Kylo Ren from Star Wars is the grandson of:", "What is the smallest bone in the human body?", 
     "Which state produced nearly half of America's rice between 2014 and 2019?", "What is the largest continent?", "What year was Microsoft founded?", "How many degrees are in a circle?",
-    "How many years is a century?"};
+    "How many years is a century?", "What is the largest planet in our solar system?", "How many spaces are on a standard Monopoly board?", "What is meteorology the study of?", "What is the symbol for potassium?",
+    "How many Lord of the Rings films are there?", "In what year was the first episode of South Park aired?", "How many players are there in a baseball team?", "In what month is the Earth closest to the sun?", 
+    "Who was the first actor to play Doctor Who?"};
 
     // Array of all corresponding question answers
     public string[] answerKey = {"Lansing", "Lake Superior", "Sword", "Greenland", "Pacific", "Nile", "8000 mi", "Madrid", "Bishop", "Green", "1991", "Switzerland", "Truel", "Mr. Potato Head", "Anakin Skywalker", 
-    "Stapes", "Arkansas", "Asia", "1975", "360", "100"};
+    "Stapes", "Arkansas", "Asia", "1975", "360", "100", "Jupiter", "40", "Weather", "K", "3", "1997", "9", "January", "William Hartnell"};
 
     // 2D array of all corresponding question choices
     // 2 1 3 4 is the pattern of right answers in each sub array
@@ -49,7 +51,8 @@ public class Game_Script : MonoBehaviour
     {"Barcelona", "Seville", "Toledo", "Madrid"}, {"Rook", "Bishop", "Queen", "Pawn"}, {"Green", "Red", "Yellow", "Blue"}, {"1970", "1985", "1991", "2000"}, {"Germany", "Russia", "United States", "Switzerland"}, 
     {"Deadlock", "Truel", "Trinity", "Standoff"}, {"Mr. Potato Head", "Rocking Horse", "LEGOs", "Lincoln Logs"}, {"Han Solo", "Sheev Palpatine", "Anakin Skywalker", "Luke Skywalker"}, 
     {"Femur", "Patella", "Tibia", "Stapes"}, {"California", "Arkansas", "Iowa", "New York"}, {"Asia", "North America", "Europe", "Australia"}, {"1980", "1968", "1975", "1992"}, {"270", "180", "90", "360"},
-    {"10", "100", "1000", "10000"}};
+    {"10", "100", "1000", "10000"}, {"Jupiter", "Saturn", "Neptune", "Uranus"}, {"60", "80", "20", "40"}, {"Meteors", "Astrology", "Weather", "Aerodynamics"}, {"Rn", "P", "Au", "K"},
+    {"4", "3", "2", "5"}, {"1997", "2000", "1988", "2003"}, {"7", "12", "9", "14"}, {"July", "August", "March", "January"}, {"Matt Smith", "William Hartnell", "David Tennant", "Patrick Troughton"}};
 
     public ArrayList usedQuestions;    // Store the indeces of used question prompts here
     
@@ -119,7 +122,6 @@ public class Game_Script : MonoBehaviour
         }
 
         // Get new question
-        //Random.state = new System.DateTime().Millisecond;
         currentIndex = Random.Range(0, QPrompts.Length);
         Debug.Log("Current Index: " + currentIndex);
 
@@ -188,11 +190,21 @@ public class Game_Script : MonoBehaviour
         changeQuestion(QPrompts[currentIndex]);
         questionCounter.GetComponent<TMPro.TextMeshProUGUI>().text = "Question #" + ++questionNumber;
 
+        // This for loop randomizes the positions of each choice per question
+        int[] choiceOrder = {0, 1, 2, 3};
+        for (int i = 0; i < 4; i++)
+        {
+            int j = Random.Range(i, 4);
+            int temp = choiceOrder[i];
+            choiceOrder[i] = choiceOrder[j];
+            choiceOrder[j] = temp;
+        }
+
         // Display new choices that correspond to the new prompt
-        Choice1.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,0];
-        Choice2.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,1];
-        Choice3.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,2];
-        Choice4.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,3];
+        Choice1.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,choiceOrder[0]];
+        Choice2.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,choiceOrder[1]];
+        Choice3.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,choiceOrder[2]];
+        Choice4.GetComponent<Button>().GetComponentInChildren<Text>().text = QChoices[currentIndex,choiceOrder[3]];
     }
 
     // Method to change the prompt
@@ -205,7 +217,7 @@ public class Game_Script : MonoBehaviour
         // Only update timer if game is active
         if (gameActive){
             timerCount -= Time.deltaTime;   // Subtract time from counter
-            timer.GetComponent<TMPro.TextMeshProUGUI>().text = "Time: " + timerCount.ToString("F2");    // Display timer
+            timer.GetComponent<TMPro.TextMeshProUGUI>().text = "Time: " + timerCount.ToString("F0");    // Display timer
 
             // Time's up
             if (timerCount <= 0){

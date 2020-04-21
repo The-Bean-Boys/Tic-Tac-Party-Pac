@@ -53,9 +53,8 @@ public class GamePlay : MonoBehaviour
         oCount = 0; //Sets o count to 0
         UpdateCount(); //Updates the text objects to 0 on game board
         turnIcons[0].SetActive(true);  //Sets the turn icon to true for the x picture
-        turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets the x picture to bright (brightness indicates turn)
         turnIcons[1].SetActive(true); //Sets turn icon to true for o picture
-        turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o picture to half brightness (not turn)
+        UpdateTurnIcons(turn);
         for (int i = 0; i < spaces.Length; i++)
         {
             spaces[i].interactable = true; //Sets all the game spaces to interactable
@@ -122,15 +121,22 @@ public class GamePlay : MonoBehaviour
         {
             playedTiles[i] = PlayerPrefs.GetInt("PlayedTiles" + i);
         }
+
+        // Redraw gameboard assets
         ShadeTiles();
         SetSolutions();
         UpdateCount();
+        UpdateTurnIcons(turn);
 
         if (PlayerPrefs.GetInt("LeftForMinigame") == 1)
         {
             ReturnToTile(PlayerPrefs.GetString("LastMinigame"), PlayerPrefs.GetInt("FocusCell"));
             PlayerPrefs.SetInt("LeftForMinigame", 0);
             NextTurn();
+        }
+        else
+        {
+            PointToTile();
         }
     }
 
@@ -199,18 +205,26 @@ public class GamePlay : MonoBehaviour
     {
         turns++; //Increases turn count
         if (turn == 0 && (!BoardWon(0) && !BoardWon(1))) //If x is turn
-        { 
+        {
             turn++; //Increases turn to 1 (o)
-            turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets x image to dull
-            turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets o image to bright
         }
         else if (!BoardWon(0) && !BoardWon(1))
         {
             turn--; //Decrements turn to 0 (x)
-            turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets x image to bright
-            turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
         }
         UpdateCount(); //Updates the text components to the counters
+        UpdateTurnIcons(turn); // Updates turn icons to reflect new player's turn
+        PointToTile();
+    }
+
+    // Calculates the tile that should be pointed to
+    void PointToTile()
+    {
+        // If turns == 0, there is no FocusCell yet, so no tile to point to
+        if (turns == 0)
+        {
+            return;
+        }
 
         int prevCell = PlayerPrefs.GetInt("FocusCell"); // Last played cell
         int focusTile = prevCell % 9; // Tile that cell "points" to
@@ -279,6 +293,26 @@ public class GamePlay : MonoBehaviour
         }
         xCountText.text = xCount.ToString();
         oCountText.text = oCount.ToString();
+    }
+
+    // Update the coloring on the turn icons
+    void UpdateTurnIcons(int turn)
+    {
+        switch (turn)
+        {
+            case 0:
+                turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets x image to bright
+                turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
+                break;
+            case 1:
+                turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets x image to dull
+                turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets o image to bright
+                break;
+            default:
+                turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+                turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+                break;
+        };
     }
 
     // Manages functions needing to run after a tile has been won by a player
@@ -531,8 +565,7 @@ public class GamePlay : MonoBehaviour
         {
             spaces[i].interactable = false;
         }
-        turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
-        turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        UpdateTurnIcons(2);
 
         if (winner == 0) { winnerText.text = "X wins!"; } else { winnerText.text = "O wins!"; }
 

@@ -12,7 +12,7 @@ public class SideScrollerPlayer : MonoBehaviour
     public float posX;
     public Vector3 startPos;
 
-    new Rigidbody2D rb;
+    Rigidbody2D rb;
     private bool isGrounded = false;
     private bool landed = false;
 

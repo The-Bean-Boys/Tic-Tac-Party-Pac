@@ -126,8 +126,12 @@ public class GamePlay : MonoBehaviour
         SetSolutions();
         UpdateCount();
 
-        ReturnToTile(PlayerPrefs.GetString("LastMinigame"), PlayerPrefs.GetInt("FocusCell"));
-        NextTurn();
+        if (PlayerPrefs.GetInt("LeftForMinigame") == 1)
+        {
+            ReturnToTile(PlayerPrefs.GetString("LastMinigame"), PlayerPrefs.GetInt("FocusCell"));
+            PlayerPrefs.SetInt("LeftForMinigame", 0);
+            NextTurn();
+        }
     }
 
     // Checks if the minigame was won by the player attempting to win a tile, places
@@ -166,6 +170,7 @@ public class GamePlay : MonoBehaviour
              */
             string minigameChoice = RandomMinigame();
             PlayerPrefs.SetString("LastMinigame", minigameChoice);
+            PlayerPrefs.SetInt("LeftForMinigame", 1);
             SceneManager.LoadScene(minigameChoice);
         }
         else

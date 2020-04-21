@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     public void Start()
     {
-        if(PlayerPrefs.GetInt("Playing") == 1)
+        if(PlayerPrefs.GetInt("Playing") == 0)
         {
             cont.interactable = false;
         }

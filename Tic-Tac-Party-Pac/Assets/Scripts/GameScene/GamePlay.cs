@@ -115,29 +115,37 @@ public class GamePlay : MonoBehaviour
         }
         for (int i = 0; i < 72; i++)
         {
-            winningLines[i] = PlayerPrefs.GetInt("WinningLines");
+            winningLines[i] = PlayerPrefs.GetInt("WinningLines" + i);
             winningLine[i].SetActive(winningLines[i] == 1);
         }
+        for (int i = 0; i < 9; i++)
+        {
+            playedTiles[i] = PlayerPrefs.GetInt("PlayedTiles" + i);
+        }
+        ShadeTiles();
+        SetSolutions();
+        UpdateCount();
+
         ReturnToTile(PlayerPrefs.GetString("LastMinigame"), PlayerPrefs.GetInt("FocusCell"));
         NextTurn();
     }
 
     // Checks if the minigame was won by the player attempting to win a tile, places
     // the player's icon on the cell if true
-    private void ReturnToTile(string minigame, int cell)
+    void ReturnToTile(string minigame, int cell)
     {
         if (PlayerPrefs.GetInt(GetMinigamePref(minigame)) != turn)
         {
             playedCells[cell] = 0; // Sets playedCells of that cell to 0 (unplayed)
+            spaces[cell].GetComponent<Image>().sprite = null; //Sets the button image to null
             spaces[cell].image.sprite = playIcons[3]; // Sets the cell image to gray (unplayed)
             spaces[cell].interactable = true; //Turns off the interaction of the button
         }
         else
         {
-
+            TileClaimed(cell / 9, turn);
         }
 
-        SetSolutions(cell / 9);
     }
 
     // Called when clicked by a button, WhatButton is int of button clicked
@@ -151,18 +159,7 @@ public class GamePlay : MonoBehaviour
         spaces[cell].interactable = false; //Turns off the interaction of the button
         if (TileWon(tile, turn))
         {
-            for (int i = 0; i < playedCells.Length; i++)
-            {
-                PlayerPrefs.SetInt("PlayedCells" + i, playedCells[i]);
-            }
-            for (int i = 0; i < winningLine.Length; i++)
-            {
-                PlayerPrefs.SetInt("WinningLine" + i, winningLines[i]);
-            }
-            PlayerPrefs.SetInt("Turn", turn);
-            PlayerPrefs.SetInt("Turns", turns);
-            PlayerPrefs.SetInt("XCount", xCount);
-            PlayerPrefs.SetInt("OCount", oCount);
+            SetPrefs();
 
             /* choose random minigame, store the name of it and the deciding tile to grab 
              * the winner of later, then load that minigame
@@ -171,6 +168,24 @@ public class GamePlay : MonoBehaviour
             PlayerPrefs.SetString("LastMinigame", minigameChoice);
             SceneManager.LoadScene(minigameChoice);
         }
+        else
+        {
+            // If TileWon is not true, but the tile is full, the tile must be cat game
+            if (TileFull(tile))
+            {
+                // If current player wins the tile in a cat game
+                if (CatWon(tile, turn))
+                {
+                    // Set current player as winner of that tile (shading is done in TileClaimed())
+                    TileClaimed(tile, turn);
+                }
+                else
+                {
+                    // Otherwise do vice versa
+                    TileClaimed(tile, (turn == 0 ? 1 : 0));
+                }
+            }
+        }
         NextTurn();
     }
 
@@ -178,19 +193,71 @@ public class GamePlay : MonoBehaviour
     void NextTurn()
     {
         turns++; //Increases turn count
-        if (turn == 0) //If x is turn
-        {
+        if (turn == 0 && (!BoardWon(0) && !BoardWon(1))) //If x is turn
+        { 
             turn++; //Increases turn to 1 (o)
             turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets x image to dull
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets o image to bright
         }
-        else
+        else if (!BoardWon(0) && !BoardWon(1))
         {
             turn--; //Decrements turn to 0 (x)
             turnIcons[0].GetComponent<Image>().color = new Color32(255, 255, 255, 255); //Sets x image to bright
             turnIcons[1].GetComponent<Image>().color = new Color32(255, 255, 255, 127); //Sets o image to dull
         }
         UpdateCount(); //Updates the text components to the counters
+
+        int prevCell = PlayerPrefs.GetInt("FocusCell"); // Last played cell
+        int focusTile = prevCell % 9; // Tile that cell "points" to
+
+        // If tile not yet won
+        if (playedTiles[focusTile] == 0)
+        {
+            // Move to that tile
+            EnableTile(focusTile);
+        }
+        else
+        {
+            // New array of unplayed tiles
+            List<int> unplayedTiles = new List<int>();
+            for (int i = 0; i < 9; i++)
+            {
+                // For every unwon tile in playedTiles, add that tile # to unplayedTiles[]
+                if (playedTiles[i] == 0)
+                    unplayedTiles.Add(i);
+            }
+
+            // turn it into a generic array for easier grabs
+            int[] temp = unplayedTiles.ToArray();
+            // if all tiles are played
+            if (temp.Length == 0)
+            {
+                if (BoardWon(turn))
+                {
+                    GameOver(turn);
+                }
+                GameOver((turn == 0 ? 1 : 0));
+
+            }
+            else
+                EnableTile(temp[Random.Range(0, temp.Length)]);
+        }
+    }
+
+    // Only enable the active tile
+    void EnableTile(int tile)
+    {
+        if (BoardWon(0) || BoardWon(1))
+            return;
+        for (int i = 0; i < spaces.Length; i++)
+        {
+            spaces[i].interactable = false;
+        }
+        for (int i = tile * 9; i < (tile * 9) + 9; i++)
+        {
+            if (playedCells[i] == 0)
+                spaces[i].interactable = true;
+        }
     }
 
     // Update score displays
@@ -207,6 +274,31 @@ public class GamePlay : MonoBehaviour
         }
         xCountText.text = xCount.ToString();
         oCountText.text = oCount.ToString();
+    }
+
+    // Manages functions needing to run after a tile has been won by a player
+    void TileClaimed(int tile, int player)
+    {
+        SetSolutions(tile);
+        for (int i = tile * 9; i < 9 + (tile * 9); i++)  //For all cells in the won tile
+        {
+            if (playedCells[i] == 0) //If it hasn't already been played 
+            {
+                playedCells[i] = player + 1; //Set it to the turn + 1
+                spaces[i].GetComponent<Image>().sprite = null; //Sets the button image to null
+                spaces[i].image.sprite = playIcons[turn]; //Sets the image of the button to the image of the player who won the tile's counter
+                UpdateCount(); //Updates the counts
+            }
+            spaces[i].interactable = false; //Makes the button not interactable
+        }
+        playedTiles[tile] = player + 1;
+        ShadeTiles();
+        SetSolutions();
+
+        if (BoardWon(player))
+        {
+            GameOver(player);
+        }
     }
 
     // Returns true if the given player has won the given tile
@@ -233,6 +325,30 @@ public class GamePlay : MonoBehaviour
         return false;
     }
 
+    // Returns true if the given player has won the game
+    bool BoardWon(int player)
+    {
+        int[] solutions = GetSolutions();
+        for (int i = 0; i < solutions.Length; i++)
+        {
+            // If x won (1 + 1 + 1, three xs in a row) and x is the player
+            if (solutions[i] == 1)
+                return player == 0;
+
+            // If o won (2 + 2 + 2, three os in a row) and o is the player
+            else if (solutions[i] == 2)
+                return player == 1;
+        }
+
+        /* if neither player has won the game, return true if 
+         * its a full board and the player has more cells
+         */
+        if (BoardFull())
+        {
+            return (player == 0 ? xCount > oCount : xCount < oCount);
+        }
+        return false;
+    }
 
     // Returns true if the tile is full, false otherwise
     bool TileFull(int tile)
@@ -244,6 +360,27 @@ public class GamePlay : MonoBehaviour
                 count++;
         }
         return count == 9;
+    }
+
+    // Returns true if every cell is placed, false otherwise
+    bool BoardFull()
+    {
+        for (int i = 0; i < playedCells.Length; i++)
+            if (playedCells[i] == 0)
+                return false;
+        return true;
+    }
+
+    // Shade tiles according to who won them
+    void ShadeTiles()
+    {
+        for (int i = 0; i < playedTiles.Length; i++)
+        {
+            if (playedTiles[i] == 1)
+                winningShades[i * 2].SetActive(true);
+            else if (playedTiles[i] == 2)
+                winningShades[i * 2 + 1].SetActive(true);
+        }
     }
 
     // Returns an array of winning lines on GIVEN TILE
@@ -278,6 +415,16 @@ public class GamePlay : MonoBehaviour
     // Saves the current solutions of the tile to winningLines[] to avoid redrawing lines 
     void SetSolutions(int tile)
     {
+        /* failsafe in case tile tries to reset solution lines which could result in
+         * more lines being drawn than were originally won (due to filling empty cells)
+         */
+        for (int i = 0; i < 8; i++)
+        {
+            if (winningLines[i + (tile * 8)] != 0)
+                return;
+        }
+
+        // Get solution lines array
         int[] solutions = GetSolutions(tile);
         for (int i = 0; i < solutions.Length; i++)
         {
@@ -294,51 +441,26 @@ public class GamePlay : MonoBehaviour
         }
     }
 
+    // Draws any bigWinLines if the game has been won
+    void SetSolutions()
+    {
+        // Get solution lines array
+        int[] solutions = GetSolutions();
+        for (int i = 0; i < solutions.Length; i++)
+        {
+            if (solutions[i] > 0) // either player won put a line where they won
+            {
+                bigWinLine[i].SetActive(true);
+            }
+        }
+    }
+
     // Returns 1 if the three ints match as an x value, 2 if they match as an o, 0 otherwise
     int ThreeInARow(int one, int two, int three)
     {
         if ((one == two) && (one == three))
             return one;
         return 0;
-    }
-
-    /* DEPRECATED FUNCTION
-     *  some of the code still necessary and will be repurposed.
-     */
-    void WinnerDisplay(int indexIn, int WhatTile)
-    {
-        int offset = WhatTile * 9; //Offset of the tile
-        int lineOffset = WhatTile * 8; //There are only 8 lines for each tile, so the lineOffset multiplier goes down by 1
-        winningLine[indexIn + lineOffset].SetActive(true); //Sets the winning line of the tile + the solution tile to active to show
-        winningLines[indexIn + lineOffset] = 1;
-        if (turn == 0)
-        {
-            winningShades[WhatTile * 2].SetActive(true);
-            playedTiles[WhatTile] = 1;
-        }
-        else
-        {
-            winningShades[WhatTile * 2 + 1].SetActive(true);
-            playedTiles[WhatTile] = 2;
-        }
-        for (int i = offset; i < 9 + offset; i++)  //For all cells in the won tile
-        {
-            if (playedCells[i] < 0) //If it hasn't already been played 
-            {
-                playedCells[i] = turn + 1; //Set it to the turn + 1
-                spaces[i].image.sprite = playIcons[turn]; //Sets the image of the button to the image of the player who won the tile's counter
-                if (turn == 0)
-                {
-                    xCount++; //Increase the x Count if x won the tile
-                }
-                else
-                {
-                    oCount++; //Increase the o count if o won the tile
-                }
-                UpdateCount(); //Updates the counts
-            }
-            spaces[i].interactable = false; //Makes the button not interactable
-        }
     }
 
     // Returns true if the given player has more cells in the given tile than the other player
@@ -412,15 +534,40 @@ public class GamePlay : MonoBehaviour
         Invoke("DisableBoard", 3);
     }
 
+    // Set Playerprefs
+    void SetPrefs()
+    {
+        for (int i = 0; i < playedCells.Length; i++)
+        {
+            PlayerPrefs.SetInt("PlayedCells" + i, playedCells[i]);
+        }
+        for (int i = 0; i < playedTiles.Length; i++)
+        {
+            PlayerPrefs.SetInt("PlayedTiles" + i, playedTiles[i]);
+        }
+        for (int i = 0; i < winningLines.Length; i++)
+        {
+            PlayerPrefs.SetInt("WinningLines" + i, winningLines[i]);
+        }
+        PlayerPrefs.SetInt("Turn", turn);
+        PlayerPrefs.SetInt("Turns", turns);
+        PlayerPrefs.SetInt("XCount", xCount);
+        PlayerPrefs.SetInt("OCount", oCount);
+        PlayerPrefs.Save();
+    }
+
     // Disable game board and enable game over page
     void DisableBoard()
     {
         gameBoard.SetActive(false);
         gameOverPage.SetActive(true);
+        PlayerPrefs.DeleteAll();
     }
 
+    // Send user back to main menu
     public void MainMenu()
     {
+        SetPrefs();
         SceneManager.LoadScene("TitleScene");
     }
 }

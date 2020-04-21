@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
                 if (!oBird.GetComponent<Rigidbody2D>().simulated) // if oBird's physics aren't active
                 {
                     winnerText.text = "X wins!"; // Only x bird's physics are active, so x didnt hit something but o did. x wins
-                    PlayerPrefs.SetString("WinnerFlappy", "x"); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
+                    PlayerPrefs.SetInt("WinnerFlappy", 0); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
                     SetPageState(PageState.FinalGameOver); // Change ui page to final game over screen, because no replay needed
                     Invoke("MinigameOver", 5);
                 }
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
                 if (oBird.GetComponent<Rigidbody2D>().simulated) // if oBird's physics are active
                 {
                     winnerText.text = "O wins!";                
-                    PlayerPrefs.SetString("WinnerFlappy", "o");
+                    PlayerPrefs.SetInt("WinnerFlappy", 1);
                     SetPageState(PageState.FinalGameOver);
                     Invoke("MinigameOver", 5);
                 }

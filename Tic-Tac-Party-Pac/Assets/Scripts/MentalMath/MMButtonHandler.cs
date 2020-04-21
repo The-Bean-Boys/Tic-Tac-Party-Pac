@@ -205,7 +205,6 @@ public class MMButtonHandler : MonoBehaviour
             if (sum == result)
             {
                 score[whoseTurn]++;
-                Debug.Log("CORRECT!");
             }
 
             GenerateProblem(); //this method resets sum and count.
@@ -320,13 +319,13 @@ public class MMButtonHandler : MonoBehaviour
         if (score[0] > score[1])
         {
             finalMessage.GetComponentInChildren<Text>().text = "X Wins!";
-            PlayerPrefs.SetString("WinnerMentalMath", "x");
+            PlayerPrefs.SetInt("WinnerMentalMath", 0);
             Invoke("MinigameOver", 5);
         }
         else if (score[0] < score[1])
         {
             finalMessage.GetComponentInChildren<Text>().text = "O Wins!";
-            PlayerPrefs.SetString("WinnerMentalMath", "o");
+            PlayerPrefs.SetInt("WinnerMentalMath", 1);
             Invoke("MinigameOver", 5);
         }
         else

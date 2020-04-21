@@ -64,7 +64,7 @@ public class SideScrollerManager : MonoBehaviour
                 if (!O.GetComponent<Rigidbody2D>().simulated) // if oBird's physics aren't active
                 {
                     winText.text = "X wins!"; // Only x bird's physics are active, so x didnt hit something but o did. x wins
-                    PlayerPrefs.SetString("WinnerSideScroller", "x"); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
+                    PlayerPrefs.SetInt("WinnerSideScroller", 1); // Stores the winner of the minigame "x" under the label "WinnerFlappyXO" in PlayerPrefs 
                     SetPageState(PageState.FinalGameOver); // Change ui page to final game over screen, because no replay needed
                     Invoke("MinigameOver", 5);
                 }
@@ -73,7 +73,7 @@ public class SideScrollerManager : MonoBehaviour
                 if (O.GetComponent<Rigidbody2D>().simulated) // if oBird's physics are active
                 {
                     winText.text = "O wins!";
-                    PlayerPrefs.SetString("WinnerSideScroller", "o");
+                    PlayerPrefs.SetInt("WinnerSideScroller", 0);
                     SetPageState(PageState.FinalGameOver);
                     Invoke("MinigameOver", 5);
                 }

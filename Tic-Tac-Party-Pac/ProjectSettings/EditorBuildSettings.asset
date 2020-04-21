@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MentalMath.unity
     guid: 0c45f6aa57e22b441bbef611e93f6e4c
+  - enabled: 1
+    path: Assets/Scenes/Trivia Minigame.unity
+    guid: 82027dfbaadfe924abafd0cf69396b68
   m_configObjects: {}

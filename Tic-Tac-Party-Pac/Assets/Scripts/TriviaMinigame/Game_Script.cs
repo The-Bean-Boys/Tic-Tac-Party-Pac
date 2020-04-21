@@ -61,7 +61,6 @@ public class Game_Script : MonoBehaviour
     {
 
         Random.InitState(System.Environment.TickCount);
-        Debug.Log(System.Environment.TickCount);
 
         playerTwoStart.SetActive(false);
         winnerDisplay.SetActive(false);
@@ -93,11 +92,9 @@ public class Game_Script : MonoBehaviour
 
         // Check who is playing
         if (playerActive == 0){
-            Debug.Log("Player 1 active");
             playerActive = 1;
         }
         else{
-            Debug.Log("Player 2 active");
             playerActive = 2;
         }
     }
@@ -113,17 +110,14 @@ public class Game_Script : MonoBehaviour
         if (playerAnswer == correctAnswer){
             if (playerActive == 1){
                 playerOneScore++;
-                //Debug.Log("Player 1 Score: " + playerOneScore);
             }
             else{
                 playerTwoScore++;
-                //Debug.Log("Player 2 Score: " + playerTwoScore);
             }
         }
 
         // Get new question
         currentIndex = Random.Range(0, QPrompts.Length);
-        Debug.Log("Current Index: " + currentIndex);
 
         // This is a new question
         if (usedQuestions.IndexOf(currentIndex) == -1){
@@ -143,7 +137,6 @@ public class Game_Script : MonoBehaviour
 
         // No new questions available
         else{
-            Debug.Log("No more questions");
             gameActive = false;         // Stop the timer
 
             // Disable buttons, reset text
@@ -219,7 +212,6 @@ public class Game_Script : MonoBehaviour
 
             // Time's up
             if (timerCount <= 0){
-                Debug.Log("Time's Up");
                 gameActive = false;
                 timer.GetComponent<TMPro.TextMeshProUGUI>().text = "TIME'S UP";
 
@@ -267,15 +259,12 @@ public class Game_Script : MonoBehaviour
     public void calculateWinner(){
         if (playerOneScore > playerTwoScore){
             winner = 1;
-            Debug.Log("Player 1 Wins!");
         }
         else if (playerTwoScore > playerOneScore){
             winner = 2;
-            Debug.Log("Player 2 Wins!");
         }
         else {
             winner = 0;
-            Debug.Log("Tie Game!");
         }
     }
 
@@ -289,7 +278,7 @@ public class Game_Script : MonoBehaviour
     // Declare winner
     private void WinnerDecided(int winner)
     {
-        PlayerPrefs.SetInt("WinnerTrivia", winner);
+        PlayerPrefs.SetInt("WinnerTrivia", winner - 1);
         Invoke("MinigameOver", 5);
     }
 

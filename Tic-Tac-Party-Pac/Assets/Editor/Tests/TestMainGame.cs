@@ -26,17 +26,22 @@ namespace Tests
             Object.Destroy(Game);
         }
         [UnityTest]
-        public IEnumerator PlaceCell()
+        public IEnumerator TestPlaceCell()
         {
             yield return null;
         }
         [UnityTest]
-        public IEnumerator PlaceCellTwo()
+        public IEnumerator TestPlaceCellTwo()
         {
             yield return null;
         }
         [UnityTest]
-        public IEnumerator TTTWins()
+        public IEnumerator TestTTTMoveToMinigame()
+        {
+            yield return null;
+        }
+        [UnityTest]
+        public IEnumerator TestInit()
         {
             yield return null;
         }

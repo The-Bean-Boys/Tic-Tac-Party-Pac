@@ -67,7 +67,7 @@ namespace Tests
             yield return new WaitForFixedUpdate();
             SH.Clicked("Blue");
             yield return new WaitForSeconds(0.3f);
-            Assert.AreEqual("GameScene", SceneManager.GetActiveScene().name);
+            Assert.AreEqual("X Wins", Winner.transform.GetChild(0).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text);
         }
 
         [UnityTest]

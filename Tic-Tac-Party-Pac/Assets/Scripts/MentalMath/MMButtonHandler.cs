@@ -45,7 +45,7 @@ public class MMButtonHandler : MonoBehaviour
     public void xstarted()
     {
         xstart.SetActive(false);
-        timeLeft = 30.0f;
+        timeLeft = 15.0f;
         timerActive = true;
         whoseTurn = 0;
         GenerateProblem();
@@ -54,7 +54,7 @@ public class MMButtonHandler : MonoBehaviour
     public void ostarted()
     {
         ostart.SetActive(false);
-        timeLeft = 30.0f;
+        timeLeft = 15.0f;
         timerActive = true;
         whoseTurn = 1;
         GenerateProblem();

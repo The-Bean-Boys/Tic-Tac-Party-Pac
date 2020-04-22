@@ -19,6 +19,12 @@ public class Score : MonoBehaviour
             BalloonManagerStatic.Otext = this;
     }
 
+    // Resets scores
+    public void Restart()
+    {
+        score = 0;
+        gameObject.GetComponent<TMPro.TextMeshPro>().text = score.ToString();
+    }
 
     // returns the score value for the score text
     public int getScore()

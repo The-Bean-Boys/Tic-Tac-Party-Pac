@@ -162,11 +162,11 @@ public class Game_Script : MonoBehaviour
                 // Display the winner
                 if (winner == 1){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 1 Wins!";
-                    WinnerDecided(0);
+                    WinnerDecided(1);
                 }
                 else if (winner == 2){
                     winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
-                    WinnerDecided(1);
+                    WinnerDecided(2);
                 }
                 else
                 {
@@ -238,11 +238,11 @@ public class Game_Script : MonoBehaviour
                     // Display the winner
                     if (winner == 1){
                         winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 1 Wins!";
-                        WinnerDecided(0);
+                        WinnerDecided(1);
                     }
                     else if (winner == 2){
                         winnerDisplay.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 Wins!";
-                        WinnerDecided(1);
+                        WinnerDecided(2);
                     }
                     else
                     {

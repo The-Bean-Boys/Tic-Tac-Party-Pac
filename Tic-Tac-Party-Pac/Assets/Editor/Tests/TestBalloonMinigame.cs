@@ -92,16 +92,5 @@ namespace Tests
             Assert.AreEqual("O Wins!", WinnerGO.GetComponent<TMPro.TextMeshPro>().text);
             Time.timeScale = 1.0f;
         }
-        [UnityTest]
-        public IEnumerator TestPTies()
-        {
-            BalloonManagerStatic.Otext = Oscore;
-            BalloonManagerStatic.Xtext = Xscore;
-            Time.timeScale = 100.0f;
-            yield return new WaitForSeconds(20.1f);
-            Assert.IsTrue(WinnerGO.activeSelf);
-            Assert.AreEqual("A tie?", WinnerGO.GetComponent<TMPro.TextMeshPro>().text);
-            Time.timeScale = 1.0f;
-        }
     }
 }

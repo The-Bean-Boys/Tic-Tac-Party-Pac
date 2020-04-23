@@ -191,6 +191,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: O-Count-TextBox
       objectReference: {fileID: 0}
+    - target: {fileID: 2406962751804598835, guid: 6ab083dc267b07c4595dda0c17b7f67d,
+        type: 3}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ab083dc267b07c4595dda0c17b7f67d, type: 3}
 --- !u!224 &8445710896257530791 stripped

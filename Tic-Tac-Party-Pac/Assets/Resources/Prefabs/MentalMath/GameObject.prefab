@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &930321566470905986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 930321566470905989}
+  - component: {fileID: 930321566470905988}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &930321566470905989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930321566470905986}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.000015258789, y: -0.000030517578, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &930321566470905988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930321566470905986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 263252ddc45e45d478d713dadb664fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  operationTextBox: {fileID: 4660029882478562974, guid: e46a9894a6f089f43b820e8d2f88bcec,
+    type: 3}
+  resultTextBox: {fileID: 4546278737163080454, guid: 483bf711f5bb1c3499a7881784ced6b5,
+    type: 3}
+  optionA: {fileID: 6727179274979819566, guid: b9841b1a92338bc47867e0af566e94ce, type: 3}
+  optionB: {fileID: 8490987653913120605, guid: 50d756c8f81009448978bfb461ccfc2c, type: 3}
+  optionC: {fileID: 1600227826835556734, guid: 031f25481b5af4745ba0b708b4dc59a4, type: 3}
+  optionD: {fileID: 1353095997150139239, guid: a5feac9e02428904fb660bc71f465846, type: 3}
+  optionE: {fileID: 7830555700835033332, guid: 4ae4530c94935594ba7035567c538b83, type: 3}
+  optionF: {fileID: 8990528584890899603, guid: f1618261b15c92248ba8d985947cc8cd, type: 3}
+  xstart: {fileID: 4304769154581121522, guid: c30b5f8aa94797743a670f7cfe90a561, type: 3}
+  ostart: {fileID: 8914561055030383550, guid: 7f5d603b7a944d048aa14a8788098143, type: 3}
+  finalMessage: {fileID: 6789217040498243111, guid: de1341f3965b38945adbecee38886724,
+    type: 3}

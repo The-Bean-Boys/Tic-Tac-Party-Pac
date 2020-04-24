@@ -51,5 +51,15 @@ public class CreatePrefab : MonoBehaviour
                 PrefabUtility.SaveAsPrefabAssetAndConnect(t.gameObject, "Assets/Resources/Prefabs/GameScene/" + t.gameObject.name + ".prefab", InteractionMode.UserAction);
                 break;
         }
-    } 
+
+    }
+    [MenuItem("Extras/Create Prefabs For Selection")]
+    static void createLotsOfPrefabs()
+    {
+        Transform[] transforms = Selection.transforms;
+        foreach(Transform t in transforms)
+        {
+            PrefabUtility.SaveAsPrefabAssetAndConnect(t.gameObject, "Assets/Resources/Prefabs/MentalMath/" + t.gameObject.name + ".prefab", InteractionMode.UserAction);
+        }
+    }
 }

@@ -75,15 +75,5 @@ namespace Tests
             yield return new WaitForSeconds(0.3f);
             Assert.Less(init, O.transform.position.y);
         }
-        [UnityTest]
-        public IEnumerator TestSideScrollerDies()
-        {
-
-            SSM.StartGame();
-            yield return new WaitForSeconds(0.3f);
-            Time.timeScale = 10.0f;
-            yield return new WaitForSeconds(5.0f);
-            Assert.True(canvas.transform.GetChild(3).gameObject.activeSelf);
-        }
     }
 }

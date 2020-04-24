@@ -308,13 +308,18 @@ PrefabInstance:
     - target: {fileID: 8964840944539493065, guid: 8844ab56d387448499c6ff3db0fae99f,
         type: 3}
       propertyPath: m_MatchWidthOrHeight
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8964840944539493066, guid: 8844ab56d387448499c6ff3db0fae99f,
         type: 3}
       propertyPath: m_RenderMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8964840944539493066, guid: 8844ab56d387448499c6ff3db0fae99f,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 444153066}
     - target: {fileID: 8964840944539493067, guid: 8844ab56d387448499c6ff3db0fae99f,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -524,7 +524,7 @@ public class GamePlay : MonoBehaviour
     // Returns the string of a random minigame
     string RandomMinigame()
     {
-        string[] minigames = { "Balloon Minigame", "FlappyXO", "Horse Minigame", "MentalMath", "SideScroller", "SimonSays", "Trivia Minigame", "Tug-of-War Minigame" };
+        string[] minigames = { "Balloon Minigame", "FlappyXO", "Horse Minigame", "MentalMath", "SimonSays", "Trivia Minigame", "Tug-of-War Minigame" }; //"SideScroller", removed due to bugs
         return minigames[Random.Range(0, minigames.Length)];
     }
 
